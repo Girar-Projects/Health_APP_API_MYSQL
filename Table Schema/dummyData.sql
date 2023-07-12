@@ -1,5 +1,5 @@
 -- HealthProfessional
-INSERT INTO HealthProfessional (LegalDocsID, firstName, lastName, Age, Gender, city, subCity, wereda, email, phoneNumber, profession, languages, Skills) 
+INSERT INTO HealthProfessional (id, firstName, lastName, Age, Gender, city, subCity, wereda, email, phoneNumber, profession, languages, Skills) 
 VALUES (1, 'John', 'Doe', 28, 'Male', 'Addis Ababa', 'Bole', '22 Mazoria', 'johndoe@gmail.com', '+251911111111', 'Doctor', 'English, Amharic', 'Surgery, Medicine');
 
 -- LegalDocuments

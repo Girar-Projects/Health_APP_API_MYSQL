@@ -8,10 +8,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'my_database'
+  host: 'db4free.net',
+  user: 'health_testing',
+  password: '0919483800',
+  database: 'health_app_test'
 });
 
 connection.connect((err) => {

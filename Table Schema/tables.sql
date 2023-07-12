@@ -24,7 +24,7 @@ CREATE TABLE LegalDocuments (
   PassportOrIDCard VARCHAR(255) NOT NULL,
   UploadDate DATE NOT NULL,
   PRIMARY KEY (LegalDocsID),
-  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE Education (
@@ -36,7 +36,7 @@ CREATE TABLE Education (
   EndingDate DATE NOT NULL,
   InstitutionAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (EducationID),
-  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE WorkExperience (
@@ -48,7 +48,7 @@ CREATE TABLE WorkExperience (
   endingDate DATE NOT NULL,
   mainResponsibilities VARCHAR(255) NOT NULL,
   PRIMARY KEY (ExperienceID),
-  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE HealthOrganization (
@@ -83,7 +83,7 @@ CREATE TABLE JobOffers (
   UploadDate DATE NOT NULL,
   PRIMARY KEY (OfferID),
   FOREIGN KEY (RequestID) REFERENCES ProfessionalRequest (RequestID),
-  FOREIGN KEY (ProffesionalID) REFERENCES HealthProfessional (LegalDocsID),
+  FOREIGN KEY (ProffesionalID) REFERENCES HealthProfessional (id),
   FOREIGN KEY (LegalDocsID) REFERENCES LegalDocuments (LegalDocsID),
   FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
 );
@@ -115,7 +115,7 @@ CREATE TABLE Bookmarks (
   id INT NOT NULL AUTO_INCREMENT,
   professionalId INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE Applications (
@@ -123,7 +123,7 @@ CREATE TABLE Applications (
   professionalId INT NOT NULL,
   jobId INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (LegalDocsID),
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id),
   FOREIGN KEY (jobId) REFERENCES JobPosts (JobID)
 );
 
@@ -134,7 +134,7 @@ CREATE TABLE ExperienceSkill (
   skillDescription VARCHAR(255) NOT NULL,
   professionalId INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE ProfessionalDocuments (
@@ -143,7 +143,7 @@ CREATE TABLE ProfessionalDocuments (
   documentPath VARCHAR(255) NOT NULL,
   professionalId INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (LegalDocsID)
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
 );
 
 CREATE TABLE LegalDocs (
