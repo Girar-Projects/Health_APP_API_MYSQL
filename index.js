@@ -107,7 +107,7 @@ app.put('/professional/personal-info/:id', authenticate, (req, res) => {
 app.post('/professional/experience-skill/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
   const data = req.body;
-  if (req.user.id !== uid || req.user.type !== 'professional') {
+  if (  req.user.type !== 'professional') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('INSERT INTO ExperienceSkill (experienceTitle, experienceDescription, skillDescription, professionalId) VALUES (?, ?, ?, ?)',
@@ -121,7 +121,7 @@ app.post('/professional/experience-skill/:uid', authenticate, (req, res) => {
 
 app.get('/professional/experience-skill/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
-  if (req.user.id !== uid || req.user.type !== 'professional') {
+  if (  req.user.type !== 'professional') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('SELECT * FROM ExperienceSkill WHERE professionalId=?', [uid], (err, results) => {
@@ -134,7 +134,7 @@ app.get('/professional/experience-skill/:uid', authenticate, (req, res) => {
 app.post('/professional/documents/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
   const data = req.body;
-  if (req.user.id !== uid || req.user.type !== 'professional') {
+  if (  req.user.type !== 'professional') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('INSERT INTO ProfessionalDocuments (documentTitle, documentPath, professionalId) VALUES (?, ?, ?)',
@@ -148,7 +148,7 @@ app.post('/professional/documents/:uid', authenticate, (req, res) => {
 
 app.get('/professional/documents/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
-  if (req.user.id !== uid || req.user.type !== 'professional') {
+  if (  req.user.type !== 'professional') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('SELECT * FROM ProfessionalDocuments WHERE professionalId=?', [uid], (err, results) => {
@@ -310,7 +310,7 @@ app.put('/organization/organization-info/:id', authenticate, (req, res) => {
 app.post('/organization/documents/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
   const data = req.body;
-  if (req.user.id !== uid || req.user.type !== 'organization') {
+  if (  req.user.type !== 'organization') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('INSERT INTO OrganizationDocuments (documentTitle, documentPath, organizationId) VALUES (?, ?, ?)',
@@ -324,7 +324,7 @@ app.post('/organization/documents/:uid', authenticate, (req, res) => {
 
 app.get('/organization/documents/:uid', authenticate, (req, res) => {
   const uid = req.params.uid;
-  if (req.user.id !== uid || req.user.type !== 'organization') {
+  if (  req.user.type !== 'organization') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('SELECT * FROM OrganizationDocuments WHERE organizationId=?', [uid], (err, results) => {
@@ -371,7 +371,7 @@ app.get('/organization/my-jobs/:id', authenticate, (req, res) => {
 
 app.post('/organization/my-jobs', authenticate, (req, res) => {
   const data = req.body;
-  if (req.user.id !== data.organizationId || req.user.type !== 'organization') {
+  if ( req.user.type !== 'organization') {
     res.status(403).json({ message: 'Access denied' });
   } else {
     connection.query('INSERT INTO JobPosts (organizationId, jobPosition, salary, deadline, jobType, numberOfEmployees, prerequisites, rolesAndResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
