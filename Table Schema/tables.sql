@@ -1,5 +1,23 @@
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  user_type VARCHAR(50) NOT NULL DEFAULT 'professional',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  paymentStatus VARCHAR(20) NOT NULL,
+  profileCreationStatus VARCHAR(20) NOT NULL,
+  longitude DECIMAL(10, 6) NOT NULL,
+  latitude DECIMAL(10, 6) NOT NULL
+);
+
+
+
+
 CREATE TABLE HealthProfessional (
   id INT NOT NULL,
+  user_id INT NOT NULL,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
   Age INT NOT NULL,
@@ -12,20 +30,24 @@ CREATE TABLE HealthProfessional (
   profession VARCHAR(255) NOT NULL,
   languages VARCHAR(255) NOT NULL,
   Skills VARCHAR(255) NOT NULL,
-  PRIMARY KEY (LegalDocsID)
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
+
 
 CREATE TABLE LegalDocuments (
   LegalDocsID INT NOT NULL,
   ProfessionallD INT NOT NULL,
   CVDocument VARCHAR(255) NOT NULL,
-
-  
   PassportOrIDCard VARCHAR(255) NOT NULL,
   UploadDate DATE NOT NULL,
   PRIMARY KEY (LegalDocsID),
   FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
 );
+
+
+
+
 
 CREATE TABLE Education (
   EducationID INT NOT NULL,
@@ -55,9 +77,11 @@ CREATE TABLE HealthOrganization (
   OrganizationID INT NOT NULL,
   OrganizationName VARCHAR(255) NOT NULL,
   OrganizationType VARCHAR(255) NOT NULL,
+  user_id INT NOT NULL,
   EmailAddress VARCHAR(255) NOT NULL,
   PhoneNumber VARCHAR(255) NOT NULL,
-  PRIMARY KEY (OrganizationID)
+  PRIMARY KEY (OrganizationID),
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
 CREATE TABLE ProfessionalRequest (
@@ -153,12 +177,3 @@ CREATE TABLE LegalDocs (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE users (
-  user_id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  user_type VARCHAR(50) NOT NULL DEFAULT 'professional',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
