@@ -112,7 +112,7 @@ app.post("/register", (req, res) => {
   const data = req.body;
 
   // Perform validation on the request data
-  if (!(data.username && data.email && data.password && data.user_type)) {
+  if (!(data.uuid && data.email && data.password && data.user_type)) {
     res.status(400).json({ message: "All fields are required" });
     return;
   }
@@ -387,6 +387,10 @@ app.get("/professional/job/:id", authenticate, (req, res) => {
 app.post("/organization/organization-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
+
+  // const id = req.params.id;
+
+
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied" });
   } else {
@@ -413,6 +417,15 @@ app.post("/organization/organization-info/:id", authenticate, (req, res) => {
 
 app.get("/organization/organization-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
+
+
+  console.log("REQ USER ID", req.user.id);
+  console.log("REQ USER type", req.user.type);
+  console.log("ID", id);
+  console.log("STATUS", req.user.type !== "professional");
+
+
+
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied" });
   } else {
