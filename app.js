@@ -1,13 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const connection = require("./db");
+const jwt = require("jsonwebtoken");
+const secretKey = "mysecretkey";
 const app = express();
-
 const professionalEndpoints = require("./professionalEndpoints");
 const OrganizationEndpoints = require("./organizationEndpoints");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 app.use("/professional", professionalEndpoints);
 app.use("/organization", OrganizationEndpoints);
@@ -30,7 +31,7 @@ app.post("/login", (req, res) => {
           { id: user.user_id, type: user.user_type },
           secretKey
         );
-        res.json({ token, userType: user.user_type, id:user.user_id});
+        res.json({ token, userType: user.user_type, id: user.user_id });
       }
     }
   );
