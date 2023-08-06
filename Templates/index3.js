@@ -110,6 +110,10 @@ app.post("/register", (req, res) => {
   );
 });
 
+
+
+
+
 app.get("/professional/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
@@ -155,6 +159,19 @@ app.put("/professional/personal-info/:id", authenticate, (req, res) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post("/professional/experience-skill/:uid", authenticate, (req, res) => {
   const uid = req.params.uid;
   const data = req.body;
@@ -178,6 +195,12 @@ app.post("/professional/experience-skill/:uid", authenticate, (req, res) => {
   }
 });
 
+
+
+
+
+
+
 app.get("/professional/experience-skill/:uid", authenticate, (req, res) => {
   const uid = req.params.uid;
 
@@ -193,7 +216,11 @@ app.get("/professional/experience-skill/:uid", authenticate, (req, res) => {
       }
     );
   }
+
 });
+
+
+
 
 app.post("/professional/documents/:uid", authenticate, (req, res) => {
   const uid = req.params.uid;
@@ -229,6 +256,10 @@ app.get("/professional/documents/:uid", authenticate, (req, res) => {
     );
   }
 });
+
+
+
+
 
 app.get("/professional/all", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
@@ -375,6 +406,9 @@ app.post("/organization/organization-info/:id", authenticate, (req, res) => {
     );
   }
 });
+
+
+
 
 app.get("/organization/organization-info/:id", authenticate, (req, res) => {
   const id = req.params.id;

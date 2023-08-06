@@ -34,32 +34,6 @@ CREATE TABLE HealthProfessional (
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
-
-
--- CREATE TABLE Education (
---   EducationID INT NOT NULL,
---   ProfessionallD INT NOT NULL,
---   Title VARCHAR(255) NOT NULL,
---   Institution VARCHAR(255) NOT NULL,
---   StartingDate DATE NOT NULL,
---   EndingDate DATE NOT NULL,
---   InstitutionAddress VARCHAR(255) NOT NULL,
---   PRIMARY KEY (EducationID),
---   FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
--- );
-
--- CREATE TABLE WorkExperience (
---   ExperienceID INT NOT NULL,
---   ProfessionallD INT NOT NULL,
---   employerName VARCHAR(255) NOT NULL,
---   positionHeld VARCHAR(255) NOT NULL,
---   startingDate DATE NOT NULL,
---   endingDate DATE NOT NULL,
---   mainResponsibilities VARCHAR(255) NOT NULL,
---   PRIMARY KEY (ExperienceID),
---   FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
--- );
-
 CREATE TABLE HealthOrganization (
   OrganizationID INT NOT NULL,
   user_id INT NOT NULL,
@@ -127,7 +101,7 @@ CREATE TABLE Bookmarks (
   professionalId INT NOT NULL,
   jobId INT NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id),
   FOREIGN KEY (jobId) REFERENCES JobPosts (JobID)
 );
 
@@ -139,16 +113,6 @@ CREATE TABLE Applications (
   FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id),
   FOREIGN KEY (jobId) REFERENCES JobPosts (JobID)
 );
-
--- CREATE TABLE ExperienceSkill (
---   id INT NOT NULL AUTO_INCREMENT,
---   experienceTitle VARCHAR(255) NOT NULL,
---   experienceDescription VARCHAR(255) NOT NULL,
---   skillDescription VARCHAR(255) NOT NULL,
---   professionalId INT NOT NULL,
---   PRIMARY KEY (id),
---   FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
--- );
 
 CREATE TABLE ProfessionalDocuments (
   id INT NOT NULL AUTO_INCREMENT,
@@ -181,5 +145,5 @@ CREATE TABLE EduWorkExperience (
   endingDate DATE,
   mainResponsibilities VARCHAR(255),
   PRIMARY KEY (id),
-  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
+  FOREIGN KEY (ProfessionalID) REFERENCES HealthProfessional (id)
 );

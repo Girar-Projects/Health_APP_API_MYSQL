@@ -35,46 +35,51 @@ CREATE TABLE HealthProfessional (
 );
 
 
+CREATE TABLE LegalDocuments (
+  LegalDocsID INT NOT NULL,
+  ProfessionallD INT NOT NULL,
+  CVDocument VARCHAR(255) NOT NULL,
+  PassportOrIDCard VARCHAR(255) NOT NULL,
+  UploadDate DATE NOT NULL,
+  PRIMARY KEY (LegalDocsID),
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
+);
 
--- CREATE TABLE Education (
---   EducationID INT NOT NULL,
---   ProfessionallD INT NOT NULL,
---   Title VARCHAR(255) NOT NULL,
---   Institution VARCHAR(255) NOT NULL,
---   StartingDate DATE NOT NULL,
---   EndingDate DATE NOT NULL,
---   InstitutionAddress VARCHAR(255) NOT NULL,
---   PRIMARY KEY (EducationID),
---   FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
--- );
 
--- CREATE TABLE WorkExperience (
---   ExperienceID INT NOT NULL,
---   ProfessionallD INT NOT NULL,
---   employerName VARCHAR(255) NOT NULL,
---   positionHeld VARCHAR(255) NOT NULL,
---   startingDate DATE NOT NULL,
---   endingDate DATE NOT NULL,
---   mainResponsibilities VARCHAR(255) NOT NULL,
---   PRIMARY KEY (ExperienceID),
---   FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
--- );
+
+
+
+CREATE TABLE Education (
+  EducationID INT NOT NULL,
+  ProfessionallD INT NOT NULL,
+  Title VARCHAR(255) NOT NULL,
+  Institution VARCHAR(255) NOT NULL,
+  StartingDate DATE NOT NULL,
+  EndingDate DATE NOT NULL,
+  InstitutionAddress VARCHAR(255) NOT NULL,
+  PRIMARY KEY (EducationID),
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
+);
+
+CREATE TABLE WorkExperience (
+  ExperienceID INT NOT NULL,
+  ProfessionallD INT NOT NULL,
+  employerName VARCHAR(255) NOT NULL,
+  positionHeld VARCHAR(255) NOT NULL,
+  startingDate DATE NOT NULL,
+  endingDate DATE NOT NULL,
+  mainResponsibilities VARCHAR(255) NOT NULL,
+  PRIMARY KEY (ExperienceID),
+  FOREIGN KEY (ProfessionallD) REFERENCES HealthProfessional (id)
+);
 
 CREATE TABLE HealthOrganization (
   OrganizationID INT NOT NULL,
-  user_id INT NOT NULL,
   OrganizationName VARCHAR(255) NOT NULL,
   OrganizationType VARCHAR(255) NOT NULL,
-  EmailAddress VARCHAR(255) NOT NULL,  
+  user_id INT NOT NULL,
+  EmailAddress VARCHAR(255) NOT NULL,
   PhoneNumber VARCHAR(255) NOT NULL,
-  city VARCHAR(255) NOT NULL,  
-  subCity VARCHAR(255) NOT NULL,
-  wereda VARCHAR(255) NOT NULL,  
-  houseNo VARCHAR(255) NOT NULL,
-  tinNo VARCHAR(255) NOT NULL,  
-  ContactPerson_Name VARCHAR(255) NOT NULL,
-  ContactPerson_Position VARCHAR(255) NOT NULL,  
-  ContactPerson_Number VARCHAR(255) NOT NULL,
   PRIMARY KEY (OrganizationID),
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
@@ -95,14 +100,26 @@ CREATE TABLE JobOffers (
   ProffesionalID INT NOT NULL,
   OfferDate DATE NOT NULL,
   OfferStatus VARCHAR(255) NOT NULL,
+  LegalDocsID INT NOT NULL,
   OrganizationID INT NOT NULL,
+  WorkPermit VARCHAR(255) NOT NULL,
+  TaxDocument VARCHAR(255) NOT NULL,
+  UploadDate DATE NOT NULL,
   PRIMARY KEY (OfferID),
   FOREIGN KEY (RequestID) REFERENCES ProfessionalRequest (RequestID),
   FOREIGN KEY (ProffesionalID) REFERENCES HealthProfessional (id),
+  FOREIGN KEY (LegalDocsID) REFERENCES LegalDocuments (LegalDocsID),
   FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
 );
 
-
+-- CREATE TABLE InstitutionLegalDocuments (
+--   InstitutionLegalDocumentsID INT NOT NULL,
+--   InstitutionID INT NOT NULL,
+--   LegalDocsID INT NOT NULL,
+--   PRIMARY KEY (InstitutionLegalDocumentsID),
+--   FOREIGN KEY (InstitutionID) REFERENCES HealthOrganization (OrganizationID),
+--   FOREIGN KEY (LegalDocsID) REFERENCES LegalDocuments (LegalDocsID)
+-- );
 
 CREATE TABLE JobPosts (
   JobID INT NOT NULL,
@@ -111,13 +128,9 @@ CREATE TABLE JobPosts (
   Salary INT NOT NULL,
   Deadline DATE NOT NULL,
   JobType VARCHAR(255) NOT NULL,
-  ExperienceLevel VARCHAR(255) NOT NULL,
-  WorkLocation VARCHAR(255) NOT NULL,
-  Category VARCHAR(255) NOT NULL,
   NumberOfEmployees INT NOT NULL,
-  Prerequisites VARCHAR(1024) NOT NULL,
-  Descriptions VARCHAR(1024),
-  RolesAndResponsibilities VARCHAR(1024) NOT NULL,
+  Prerequisites VARCHAR(255) NOT NULL,
+  RolesAndResponsibilities VARCHAR(255) NOT NULL,
   PRIMARY KEY (JobID),
   FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
 );
@@ -140,15 +153,15 @@ CREATE TABLE Applications (
   FOREIGN KEY (jobId) REFERENCES JobPosts (JobID)
 );
 
--- CREATE TABLE ExperienceSkill (
---   id INT NOT NULL AUTO_INCREMENT,
---   experienceTitle VARCHAR(255) NOT NULL,
---   experienceDescription VARCHAR(255) NOT NULL,
---   skillDescription VARCHAR(255) NOT NULL,
---   professionalId INT NOT NULL,
---   PRIMARY KEY (id),
---   FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
--- );
+CREATE TABLE ExperienceSkill (
+  id INT NOT NULL AUTO_INCREMENT,
+  experienceTitle VARCHAR(255) NOT NULL,
+  experienceDescription VARCHAR(255) NOT NULL,
+  skillDescription VARCHAR(255) NOT NULL,
+  professionalId INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
+);
 
 CREATE TABLE ProfessionalDocuments (
   id INT NOT NULL AUTO_INCREMENT,
@@ -161,11 +174,9 @@ CREATE TABLE ProfessionalDocuments (
 
 CREATE TABLE LegalDocs (
   id INT NOT NULL AUTO_INCREMENT,
-  OrganizationID INT NOT NULL,
   documentName VARCHAR(255) NOT NULL,
   documentPath VARCHAR(255) NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
+  PRIMARY KEY (id)
 );
 
 
@@ -173,7 +184,7 @@ CREATE TABLE LegalDocs (
 CREATE TABLE EduWorkExperience (
   id INT NOT NULL,
   ProfessionalID INT NOT NULL,
-  EducationLevel VARCHAR(255) NOT NULL,
+  EducationLevel VARCHAR(255) NOT NULL
   WorkExperienceYear VARCHAR(255) NOT NULL,
   employerName VARCHAR(255) ,
   positionHeld VARCHAR(255) ,
