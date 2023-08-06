@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e0f35c57-ee64-421a-a9cc-9a7c85e4bb4e",
+		"_postman_id": "b94c29eb-ed4e-453d-8390-0803ce31b8bf",
 		"name": "Healthcare Job Platform",
 		"description": "API Endpoints for Health Professional Application",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -32,11 +32,12 @@
 									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/personal-info",
+									"raw": "{{baseUrl}}/professional/personal-info",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"personal-info"
 									]
 								}
@@ -54,18 +55,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/personal-info/:id",
+									"raw": "{{baseUrl}}/professional/personal-info/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"personal-info",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id"
-										}
+										"1"
 									]
 								}
 							},
@@ -90,11 +87,12 @@
 									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/personal-info/:id",
+									"raw": "{{baseUrl}}/professional/personal-info/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"personal-info",
 										":id"
 									],
@@ -118,11 +116,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/all",
+									"raw": "{{baseUrl}}/professional/all",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"all"
 									]
 								}
@@ -153,11 +152,12 @@
 									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"raw": "{{baseUrl}}/professional/edu-work-experience/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"edu-work-experience",
 										":id"
 									],
@@ -181,11 +181,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"raw": "{{baseUrl}}/professional/edu-work-experience/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"edu-work-experience",
 										":id"
 									],
@@ -217,11 +218,12 @@
 									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"raw": "{{baseUrl}}/professional/edu-work-experience/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"edu-work-experience",
 										":id"
 									],
@@ -258,11 +260,12 @@
 									"raw": "{\n\t\"documentTitle\": \"\",\n\t\"documentPath\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/documents/:id",
+									"raw": "{{baseUrl}}/professional/documents/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"documents",
 										":id"
 									],
@@ -286,11 +289,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/documents/:id",
+									"raw": "{{baseUrl}}/professional/documents/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"documents",
 										":id"
 									],
@@ -327,11 +331,12 @@
 									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/apply",
+									"raw": "{{baseUrl}}/professional/apply",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"apply"
 									]
 								}
@@ -349,11 +354,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/my-applied",
+									"raw": "{{baseUrl}}/professional/my-applied",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"my-applied"
 									]
 								}
@@ -384,11 +390,12 @@
 									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/bookmark",
+									"raw": "{{baseUrl}}/professional/bookmark",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"bookmark"
 									]
 								}
@@ -406,11 +413,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/bookmarks",
+									"raw": "{{baseUrl}}/professional/bookmarks",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"bookmarks"
 									]
 								}
@@ -428,11 +436,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/bookmark/:id",
+									"raw": "{{baseUrl}}/professional/bookmark/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"bookmark",
 										":id"
 									],
@@ -456,11 +465,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/bookmark/:professionalId",
+									"raw": "{{baseUrl}}/professional/bookmark/:professionalId",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"professional",
 										"bookmark",
 										":professionalId"
 									],
@@ -530,11 +540,12 @@
 									"raw": "{\n    \"name\": \"My Organization\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/organization-info",
+									"raw": "{{baseUrl}}/organization/organization-info",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"organization-info"
 									]
 								}
@@ -556,11 +567,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/organization-info/1",
+									"raw": "{{baseUrl}}/organization/organization-info/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"organization-info",
 										"1"
 									]
@@ -587,11 +599,12 @@
 									"raw": "{\n    \"name\": \"My Organization\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/organization-info/1",
+									"raw": "{{baseUrl}}/organization/organization-info/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"organization-info",
 										"1"
 									]
@@ -623,11 +636,12 @@
 									"raw": "{\n    \"documentName\": \"License\",\n    \"documentPath\": \"/path/to/license\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/documents/1",
+									"raw": "{{baseUrl}}/organization/documents/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"documents",
 										"1"
 									]
@@ -650,11 +664,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/documents/1",
+									"raw": "{{baseUrl}}/organization/documents/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"documents",
 										"1"
 									]
@@ -682,11 +697,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professionals",
+									"raw": "{{baseUrl}}/organization/professionals",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"professionals"
 									]
 								}
@@ -708,11 +724,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/1",
+									"raw": "{{baseUrl}}/organization/professional/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"professional",
 										"1"
 									]
@@ -740,11 +757,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/my-jobs/1",
+									"raw": "{{baseUrl}}/organization/my-jobs/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"my-jobs",
 										"1"
 									]
@@ -771,11 +789,12 @@
 									"raw": "{\n    \"organizationId\": 1,\n    \"jobPosition\": \"Nurse\",\n    \"salary\": \"10,000\",\n    \"deadline\": \"2022-01-01\",\n    \"jobType\": \"Full-Time\",\n    \"numberOfEmployees\": 5,\n    \"prerequisites\": \"Diploma in Nursing\",\n    \"descriptions\": \"Would like to hire nurses for our hospital\",\n    \"rolesAndResponsibilities\": \"Providing patient care\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/my-jobs",
+									"raw": "{{baseUrl}}/organization/my-jobs",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"my-jobs"
 									]
 								}
@@ -797,11 +816,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/my-jobs/1",
+									"raw": "{{baseUrl}}/organization/my-jobs/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"my-jobs",
 										"1"
 									]
@@ -828,11 +848,12 @@
 									"raw": "{\n    \"organizationId\": 1,\n    \"jobPosition\": \"Nurse\",\n    \"salary\": \"10,000\",\n    \"deadline\": \"2022-01-01\",\n    \"jobType\": \"Full-Time\",\n    \"numberOfEmployees\": 5,\n    \"prerequisites\": \"Diploma in Nursing\",\n    \"descriptions\": \"Would like to hire nurses for our hospital\",\n    \"rolesAndResponsibilities\": \"Providing patient care\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/my-jobs/1",
+									"raw": "{{baseUrl}}/organization/my-jobs/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"my-jobs",
 										"1"
 									]
@@ -860,11 +881,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/applied/1",
+									"raw": "{{baseUrl}}/organization/applied/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"organization",
 										"applied",
 										"1"
 									]
@@ -891,7 +913,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"myemail@example.com\",\n    \"password\": \"mypassword\"\n}"
+							"raw": "{\n    \"email\": \"pro@test.com\",\n    \"password\": \"test\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/login",
@@ -903,7 +925,66 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Professional Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"pro@test.com\",\n    \"password\": \"test\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Professional Login Copy",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"org@test.com\",\n    \"password\": \"test\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				},
 				{
 					"name": "Register",
@@ -932,6 +1013,26 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
