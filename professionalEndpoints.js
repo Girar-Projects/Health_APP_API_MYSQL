@@ -16,7 +16,12 @@ router.post("/personal-info", authenticate, (req, res) => {
       "SELECT * FROM HealthProfessional WHERE user_id=?",
       [req.user.user_id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to check if professional already exists"
+          );
         if (results.length > 0) {
           res.status(400).json({ message: "Professional already exists" });
         } else {
@@ -38,7 +43,12 @@ router.post("/personal-info", authenticate, (req, res) => {
               data.Skills,
             ],
             (err) => {
-              if (err) return queryError(res, err);
+              if (err)
+                return queryError(
+                  res,
+                  err,
+                  "Failed to create professional profile"
+                );
               res.json({ message: "Professional created successfully" });
             }
           );
@@ -59,7 +69,8 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
       "SELECT * FROM HealthProfessional WHERE id=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to fetch professional profile");
         res.json(results);
       }
     );
@@ -93,7 +104,8 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
         req.user.user_id,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to update professional profile");
         res.json({ message: "Personal info updated successfully" });
       }
     );
@@ -106,7 +118,8 @@ router.get("/all", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied" });
   } else {
     connection.query("SELECT * FROM HealthProfessional", (err, results) => {
-      if (err) return queryError(res, err);
+      if (err)
+        return queryError(res, err, "Failed to fetch professionals list");
       res.json(results);
     });
   }
@@ -135,7 +148,12 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
         data.mainResponsibilities,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to add education and work experience"
+          );
         res.json({
           message: "Education and work experience added successfully",
         });
@@ -155,7 +173,12 @@ router.get("/edu-work-experience/:id", authenticate, (req, res) => {
       "SELECT * FROM EduWorkExperience WHERE ProfessionalID=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to fetch education and work experience"
+          );
         res.json(results);
       }
     );
@@ -183,7 +206,12 @@ router.put("/edu-work-experience/:id", authenticate, (req, res) => {
         id,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to update education and work experience"
+          );
         res.json({
           message: "Education and work experience updated successfully",
         });
@@ -206,7 +234,7 @@ router.post("/documents/:id", authenticate, (req, res) => {
       "INSERT INTO ProfessionalDocuments (documentTitle, documentPath, professionalId) VALUES (?, ?, ?)",
       [data.documentTitle, data.documentPath, id],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to add new document path");
         res.json({ message: "Document added successfully" });
       }
     );
@@ -224,7 +252,7 @@ router.get("/documents/:id", authenticate, (req, res) => {
       "SELECT * FROM ProfessionalDocuments WHERE professionalId=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to fetch document");
         res.json(results);
       }
     );
@@ -244,7 +272,8 @@ router.post("/apply", authenticate, (req, res) => {
       "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
       [data.professionalId, data.jobId],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to submit job application");
         res.json({ message: "Job application submitted successfully" });
       }
     );
@@ -262,7 +291,8 @@ router.get("/my-applied", authenticate, (req, res) => {
       "SELECT * FROM Applications WHERE professionalId=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to fetch list of applied jobs");
         res.json(results);
       }
     );
@@ -281,7 +311,7 @@ router.post("/bookmark", authenticate, (req, res) => {
       "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?,?)",
       [data.professionalId, data.jobId],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to add bookmarked job");
         res.json({ message: "Bookmark Added successfully" });
       }
     );
@@ -294,7 +324,8 @@ router.get("/bookmarks", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied" });
   } else {
     connection.query("SELECT * FROM Bookmarks", (err, results) => {
-      if (err) return queryError(res, err);
+      if (err)
+        return queryError(res, err, "Failed to fetch list of bookmarked jobs");
       res.json(results);
     });
   }
@@ -311,7 +342,7 @@ router.get("/bookmark/:id", authenticate, (req, res) => {
       "SELECT * FROM Bookmarks WHERE id=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to fetch bookmarked job");
         res.json(results);
       }
     );
@@ -329,7 +360,12 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
       "SELECT * FROM Bookmarks WHERE professionalId=?",
       [professionalId],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to fetch list of bookmarked jobs"
+          );
         res.json(results);
       }
     );
@@ -347,7 +383,7 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
       "DELETE FROM Bookmarks WHERE id=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to delete bookmarked job");
         res.json({ message: "Bookmark Removed successfully" });
       }
     );

@@ -29,7 +29,7 @@ router.post("/organization-info", authenticate, (req, res) => {
         data.contactPersonNumber,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to Add organization info");
         res.json({ message: "Organization info added successfully" });
       }
     );
@@ -47,7 +47,8 @@ router.get("/organization-info/:id", authenticate, (req, res) => {
       "SELECT * FROM HealthOrganization WHERE OrganizationID=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to fetch organization info");
         if (results.length === 0) {
           res.status(404).json({ message: "Organization not found" });
         } else {
@@ -84,7 +85,8 @@ router.put("/organization-info/:id", authenticate, (req, res) => {
         id,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err)
+          return queryError(res, err, "Failed to update organization info");
         res.json({ message: "Organization info updated successfully" });
       }
     );
@@ -105,7 +107,7 @@ router.post("/documents/:uid", authenticate, (req, res) => {
       "INSERT INTO LegalDocs (OrganizationID, documentName, documentPath) VALUES (?, ?, ?)",
       [uid, data.documentName, data.documentPath],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to add new document");
         res.json({ message: "Document added successfully" });
       }
     );
@@ -123,21 +125,22 @@ router.get("/documents/:uid", authenticate, (req, res) => {
       "SELECT * FROM LegalDocs WHERE OrganizationID=?",
       [uid],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to fetch documents");
         res.json(results);
       }
     );
   }
 });
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ List of Professional  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ List of Professionals  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 router.get("/professionals", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied" });
   } else {
     connection.query("SELECT * FROM HealthProfessional", (err, results) => {
-      if (err) return queryError(res, err);
+      if (err)
+        return queryError(res, err, "Failed to fetch professionals list");
       res.json(results);
     });
   }
@@ -153,7 +156,7 @@ router.get("/professional/:id", authenticate, (req, res) => {
       "SELECT * FROM HealthProfessional WHERE  id=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to fetch professional");
         res.json(results);
       }
     );
@@ -173,7 +176,7 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
       "SELECT * FROM JobPosts WHERE organizationId=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to fetch job postings");
         res.json(results);
       }
     );
@@ -201,7 +204,7 @@ router.post("/my-jobs", authenticate, (req, res) => {
         data.rolesAndResponsibilities,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to create job post");
         res.json({ message: "Job posting created successfully" });
       }
     );
@@ -216,8 +219,8 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied" });
   } else {
     connection.query("SELECT FROM JobPosts WHERE id=?", [id], (err) => {
-      if (err) return queryError(res, err);
-      res.json({ message: "Job posting d successfully" });
+      if (err) return queryError(res, err, "Failed to fetch job posting");
+      res.json({ message: "Job posting fetched successfully" });
     });
   }
 });
@@ -245,7 +248,7 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
         data.organizationId,
       ],
       (err) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to update job posting");
         res.json({ message: "Job posting updated successfully" });
       }
     );
@@ -266,7 +269,7 @@ router.get("/applied/:id", authenticate, (req, res) => {
       "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.id WHERE JobPosts.organizationId=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err);
+        if (err) return queryError(res, err, "Failed to list job applications");
         res.json(results);
       }
     );
