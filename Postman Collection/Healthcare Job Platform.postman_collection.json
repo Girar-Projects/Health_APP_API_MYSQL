@@ -1,0 +1,947 @@
+{
+	"info": {
+		"_postman_id": "e0f35c57-ee64-421a-a9cc-9a7c85e4bb4e",
+		"name": "Healthcare Job Platform",
+		"description": "API Endpoints for Health Professional Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21051828"
+	},
+	"item": [
+		{
+			"name": "Professional API Endpoints",
+			"item": [
+				{
+					"name": "Personal Info",
+					"item": [
+						{
+							"name": "Add new Health-professional",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/personal-info",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"personal-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get single Professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/personal-info/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"personal-info",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Single Professional",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/personal-info/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"personal-info",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List all professionals",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Education and Work Experience",
+					"item": [
+						{
+							"name": "Add new education and work experience for a professional",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"edu-work-experience",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get education and work experience for a professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"edu-work-experience",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update education and work experience for a professional",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/edu-work-experience/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"edu-work-experience",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Documents",
+					"item": [
+						{
+							"name": "Add new Document Path for Professional",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"documentTitle\": \"\",\n\t\"documentPath\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/documents/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"documents",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get document for a professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/documents/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"documents",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Job Applications",
+					"item": [
+						{
+							"name": "Add new Job Application",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/apply",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"apply"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List all Applied Jobs for a single Professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/my-applied",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"my-applied"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bookmarked Jobs",
+					"item": [
+						{
+							"name": "Add new Bookmarked Jobs",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/bookmark",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bookmark"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All bookmarked Jobs",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bookmarks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bookmarks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get single bookmark job based on its ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bookmark/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bookmark",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get bookmarks For single Professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bookmark/:professionalId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bookmark",
+										":professionalId"
+									],
+									"variable": [
+										{
+											"key": "professionalId"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a bookmarked job",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/bookmark/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"bookmark",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Organization API Endpoints",
+			"item": [
+				{
+					"name": "Organization Info",
+					"item": [
+						{
+							"name": "Add new organization info",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"My Organization\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization-info",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization-info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get organization info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/organization-info/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization-info",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update organization info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"My Organization\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/organization-info/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization-info",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Legal Documents",
+					"item": [
+						{
+							"name": "Add new document to an organization",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"documentName\": \"License\",\n    \"documentPath\": \"/path/to/license\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/documents/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"documents",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get documents of an organization",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/documents/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"documents",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "List of Professional",
+					"item": [
+						{
+							"name": "List all professionals",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professionals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professionals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get professional by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Job Posts",
+					"item": [
+						{
+							"name": "List all jobs posted by org",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/my-jobs/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"my-jobs",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add a new job post",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"organizationId\": 1,\n    \"jobPosition\": \"Nurse\",\n    \"salary\": \"10,000\",\n    \"deadline\": \"2022-01-01\",\n    \"jobType\": \"Full-Time\",\n    \"numberOfEmployees\": 5,\n    \"prerequisites\": \"Diploma in Nursing\",\n    \"descriptions\": \"Would like to hire nurses for our hospital\",\n    \"rolesAndResponsibilities\": \"Providing patient care\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/my-jobs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"my-jobs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a single job post by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/my-jobs/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"my-jobs",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update a job post for org",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"organizationId\": 1,\n    \"jobPosition\": \"Nurse\",\n    \"salary\": \"10,000\",\n    \"deadline\": \"2022-01-01\",\n    \"jobType\": \"Full-Time\",\n    \"numberOfEmployees\": 5,\n    \"prerequisites\": \"Diploma in Nursing\",\n    \"descriptions\": \"Would like to hire nurses for our hospital\",\n    \"rolesAndResponsibilities\": \"Providing patient care\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/my-jobs/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"my-jobs",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Job Applications",
+					"item": [
+						{
+							"name": "List job applications for anorg",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/applied/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"applied",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"myemail@example.com\",\n    \"password\": \"mypassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"myuuid\",\n    \"email\": \"mynewemail@example.com\",\n    \"password\": \"mynewpassword\",\n    \"user_type\": \"organization\",\n    \"paymentStatus\": \"paid\",\n    \"profileCreationStatus\": \"completed\",\n    \"longitude\": 24.93545,\n    \"latitude\": 60.16952\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://health-app-mysql-api.onrender.com"
+		},
+		{
+			"key": "token",
+			"value": "TOKEN_GOES_HERE"
+		}
+	]
+}

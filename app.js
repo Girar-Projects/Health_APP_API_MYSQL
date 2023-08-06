@@ -31,7 +31,7 @@ app.post("/login", (req, res) => {
           { id: user.user_id, type: user.user_type },
           secretKey
         );
-        res.json({ token, userType: user.user_type, id: user.user_id });
+        res.json({ token, userType: user.user_type, user_id: user.user_id });
       }
     }
   );
