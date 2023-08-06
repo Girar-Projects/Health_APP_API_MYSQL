@@ -8,6 +8,7 @@ const OrganizationEndpoints = require("./organizationEndpoints");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 app.use("/professional", professionalEndpoints);
 app.use("/organization", OrganizationEndpoints);
 
