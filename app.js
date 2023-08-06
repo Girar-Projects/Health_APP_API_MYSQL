@@ -40,9 +40,28 @@ app.post("/login", (req, res) => {
 app.post("/register", (req, res) => {
   const data = req.body;
 
+  console.log(data);
   // Perform validation on the request data
-  if (!(data.uuid && data.email && data.password && data.user_type)) {
-    res.status(400).json({ message: "All fields are required" });
+  if (
+    typeof data.uuid !== "string" ||
+    typeof data.email !== "string" ||
+    typeof data.password !== "string" ||
+    typeof data.user_type !== "string" ||
+    typeof data.paymentStatus !== "string" ||
+    typeof data.profileCreationStatus !== "string" ||
+    isNaN(parseFloat(data.longitude)) ||
+    isNaN(parseFloat(data.latitude)) ||
+    !data.uuid ||
+    !data.email ||
+    !data.password ||
+    !data.user_type ||
+    !data.paymentStatus ||
+    !data.profileCreationStatus
+  ) {
+    res.status(400).json({
+      message:
+        "uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude and latitude are required and should be of the correct data type",
+    });
     return;
   }
 
@@ -52,18 +71,27 @@ app.post("/register", (req, res) => {
   }
 
   // Insert the new user into the users table
-  connection.query(
-    "INSERT INTO users (uuid, email, password, user_type) VALUES (?, ?, ?, ?)",
-    [data.uuid, data.email, data.password, data.user_type],
-    (err, result) => {
-      if (err) {
-        console.error("Error registering new user: " + err.stack);
-        res.sendStatus(500);
-      } else {
-        res.json({ message: "User registered successfully" });
-      }
+  const sql =
+    "INSERT INTO users (uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  const values = [
+    data.uuid,
+    data.email,
+    data.password,
+    data.user_type,
+    data.paymentStatus,
+    data.profileCreationStatus,
+    parseFloat(data.longitude),
+    parseFloat(data.latitude),
+  ];
+
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error registering new user: " + err.stack);
+      res.sendStatus(500);
+    } else {
+      res.json({ message: "User registered successfully" });
     }
-  );
+  });
 });
 
 app.get("/", (req, res) => {

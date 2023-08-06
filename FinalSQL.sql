@@ -3,13 +3,13 @@ CREATE TABLE users (
   uuid VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  user_type VARCHAR(50) NOT NULL,
+  user_type VARCHAR(250) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  paymentStatus VARCHAR(20) NOT NULL,
-  profileCreationStatus VARCHAR(20) NOT NULL,
-  longitude DECIMAL(10, 6) NOT NULL,
-  latitude DECIMAL(10, 6) NOT NULL
+  paymentStatus VARCHAR(225) NOT NULL,
+  profileCreationStatus VARCHAR(225) NOT NULL,
+  longitude DECIMAL(10, 6) ,
+  latitude DECIMAL(10, 6) 
 );
 
 
