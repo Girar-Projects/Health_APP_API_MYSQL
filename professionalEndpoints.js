@@ -10,7 +10,7 @@ router.post("/personal-info", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM HealthProfessional WHERE user_id=?",
@@ -49,7 +49,13 @@ router.post("/personal-info", authenticate, (req, res) => {
                   err,
                   "Failed to create professional profile"
                 );
-              res.json({ message: "Professional created successfully" });
+              res
+                .status(200)
+                .json({
+                  message: "Professional created successfully",
+                  status: 200,
+                  totalCount: 1,
+                });
             }
           );
         }
@@ -63,7 +69,7 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM HealthProfessional WHERE id=?",
@@ -71,7 +77,9 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
       (err, results) => {
         if (err)
           return queryError(res, err, "Failed to fetch professional profile");
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -83,7 +91,7 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "UPDATE HealthProfessional SET firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, phoneNumber=?, profession=?, languages=?, Skills=? WHERE id=? AND user_id=?",
@@ -106,7 +114,13 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
       (err) => {
         if (err)
           return queryError(res, err, "Failed to update professional profile");
-        res.json({ message: "Personal info updated successfully" });
+        res
+          .status(200)
+          .json({
+            message: "Personal info updated successfully",
+            status: 200,
+            totalCount: 1,
+          });
       }
     );
   }
@@ -115,12 +129,14 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
 // List all professionals
 router.get("/all", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query("SELECT * FROM HealthProfessional", (err, results) => {
       if (err)
         return queryError(res, err, "Failed to fetch professionals list");
-      res.json(results);
+      res
+        .status(200)
+        .json({ data: results, status: 200, totalCount: results.length });
     });
   }
 });
@@ -133,7 +149,7 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "INSERT INTO EduWorkExperience (ProfessionalID, EducationLevel, WorkExperienceYear, employerName, positionHeld, startingDate, endingDate, mainResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -154,8 +170,10 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
             err,
             "Failed to add education and work experience"
           );
-        res.json({
+        res.status(200).json({
           message: "Education and work experience added successfully",
+          status: 200,
+          totalCount: 1,
         });
       }
     );
@@ -167,7 +185,7 @@ router.get("/edu-work-experience/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM EduWorkExperience WHERE ProfessionalID=?",
@@ -179,7 +197,9 @@ router.get("/edu-work-experience/:id", authenticate, (req, res) => {
             err,
             "Failed to fetch education and work experience"
           );
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -191,7 +211,7 @@ router.put("/edu-work-experience/:id", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "UPDATE EduWorkExperience SET EducationLevel=?, WorkExperienceYear=?, employerName=?, positionHeld=?, startingDate=?, endingDate=?, mainResponsibilities=? WHERE id=?",
@@ -212,8 +232,10 @@ router.put("/edu-work-experience/:id", authenticate, (req, res) => {
             err,
             "Failed to update education and work experience"
           );
-        res.json({
+        res.status(200).json({
           message: "Education and work experience updated successfully",
+          status: 200,
+          totalCount: 1,
         });
       }
     );
@@ -228,14 +250,20 @@ router.post("/documents/:id", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "INSERT INTO ProfessionalDocuments (documentTitle, documentPath, professionalId) VALUES (?, ?, ?)",
       [data.documentTitle, data.documentPath, id],
       (err) => {
         if (err) return queryError(res, err, "Failed to add new document path");
-        res.json({ message: "Document added successfully" });
+        res
+          .status(200)
+          .json({
+            message: "Document added successfully",
+            status: 200,
+            totalCount: 1,
+          });
       }
     );
   }
@@ -246,14 +274,16 @@ router.get("/documents/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM ProfessionalDocuments WHERE professionalId=?",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to fetch document");
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -266,7 +296,7 @@ router.post("/apply", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
@@ -274,7 +304,11 @@ router.post("/apply", authenticate, (req, res) => {
       (err) => {
         if (err)
           return queryError(res, err, "Failed to submit job application");
-        res.json({ message: "Job application submitted successfully" });
+        res.status(200).json({
+          message: "Job application submitted successfully",
+          status: 200,
+          totalCount: 1,
+        });
       }
     );
   }
@@ -285,7 +319,7 @@ router.get("/my-applied", authenticate, (req, res) => {
   const id = req.user.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM Applications WHERE professionalId=?",
@@ -293,7 +327,9 @@ router.get("/my-applied", authenticate, (req, res) => {
       (err, results) => {
         if (err)
           return queryError(res, err, "Failed to fetch list of applied jobs");
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -305,14 +341,20 @@ router.post("/bookmark", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?,?)",
       [data.professionalId, data.jobId],
       (err) => {
         if (err) return queryError(res, err, "Failed to add bookmarked job");
-        res.json({ message: "Bookmark Added successfully" });
+        res
+          .status(200)
+          .json({
+            message: "Bookmark Added successfully",
+            status: 200,
+            totalCount: 1,
+          });
       }
     );
   }
@@ -321,12 +363,14 @@ router.post("/bookmark", authenticate, (req, res) => {
 //Get All bookmarked Jobs
 router.get("/bookmarks", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query("SELECT * FROM Bookmarks", (err, results) => {
       if (err)
         return queryError(res, err, "Failed to fetch list of bookmarked jobs");
-      res.json(results);
+      res
+        .status(200)
+        .json({ data: results, status: 200, totalCount: results.length });
     });
   }
 });
@@ -336,14 +380,16 @@ router.get("/bookmark/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM Bookmarks WHERE id=?",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to fetch bookmarked job");
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -354,7 +400,7 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
   const id = req.params.professionalId;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "SELECT * FROM Bookmarks WHERE professionalId=?",
@@ -366,7 +412,9 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
             err,
             "Failed to fetch list of bookmarked jobs"
           );
-        res.json(results);
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
       }
     );
   }
@@ -377,14 +425,20 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied" });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
       "DELETE FROM Bookmarks WHERE id=?",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to delete bookmarked job");
-        res.json({ message: "Bookmark Removed successfully" });
+        res
+          .status(200)
+          .json({
+            message: "Bookmark Removed successfully",
+            status: 200,
+            totalCount: 1,
+          });
       }
     );
   }
