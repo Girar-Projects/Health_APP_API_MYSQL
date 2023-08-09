@@ -96,18 +96,19 @@ app.post("/register", (req, res) => {
 
 // Endpoint for updating user password
 app.put("/update-password/:user_id", (req, res) => {
-  const { userId } = req.params;
+  const { user_id } = req.params;
   const { newPassword } = req.body;
 
+  // console.log(user_id, ", ", newPassword);
   // Perform validation on the request data
-  if (!userId || !newPassword) {
+  if (!user_id || !newPassword) {
     res.status(400).json({ message: "userId and newPassword are required" });
     return;
   }
 
   // Check if the user exists with the given user ID
   const checkUserSql = "SELECT * FROM users WHERE user_id=?";
-  connection.query(checkUserSql, userId, (err, results) => {
+  connection.query(checkUserSql, user_id, (err, results) => {
     if (err) {
       console.error("Error executing query: " + err.stack);
       res.sendStatus(500);
@@ -116,14 +117,18 @@ app.put("/update-password/:user_id", (req, res) => {
     } else {
       // Update the user's password
       const updatePasswordSql = "UPDATE users SET password=? WHERE user_id=?";
-      connection.query(updatePasswordSql, [newPassword, userId], (err, result) => {
-        if (err) {
-          console.error("Error updating user password: " + err.stack);
-          res.sendStatus(500);
-        } else {
-          res.json({ message: "User password reset successfully" });
+      connection.query(
+        updatePasswordSql,
+        [newPassword, user_id],
+        (err, result) => {
+          if (err) {
+            console.error("Error updating user password: " + err.stack);
+            res.sendStatus(500);
+          } else {
+            res.json({ message: "User password reset successfully" });
+          }
         }
-      });
+      );
     }
   });
 });
