@@ -96,46 +96,34 @@ app.post("/register", (req, res) => {
 
 // Endpoint for updating user password
 app.put("/update-password/:user_id", (req, res) => {
-  const user_id = req.params.user_id;
-  const { oldPassword, newPassword } = req.body;
+  const { userId } = req.params;
+  const { newPassword } = req.body;
 
   // Perform validation on the request data
-  if (!oldPassword || !newPassword) {
-    res
-      .status(400)
-      .json({ message: "oldPassword and newPassword are required" });
+  if (!userId || !newPassword) {
+    res.status(400).json({ message: "userId and newPassword are required" });
     return;
   }
 
-  // Check if the user exists
+  // Check if the user exists with the given user ID
   const checkUserSql = "SELECT * FROM users WHERE user_id=?";
-  connection.query(checkUserSql, user_id, (err, results) => {
+  connection.query(checkUserSql, userId, (err, results) => {
     if (err) {
       console.error("Error executing query: " + err.stack);
       res.sendStatus(500);
     } else if (results.length === 0) {
       res.status(404).json({ message: "User not found" });
     } else {
-      // Verify the old password
-      const user = results[0];
-      if (user.password !== oldPassword) {
-        res.status(401).json({ message: "Incorrect old password" });
-      } else {
-        // Update the user's password
-        const updatePasswordSql = "UPDATE users SET password=? WHERE user_id=?";
-        connection.query(
-          updatePasswordSql,
-          [newPassword, user_id],
-          (err, result) => {
-            if (err) {
-              console.error("Error updating user password: " + err.stack);
-              res.sendStatus(500);
-            } else {
-              res.json({ message: "User password updated successfully" });
-            }
-          }
-        );
-      }
+      // Update the user's password
+      const updatePasswordSql = "UPDATE users SET password=? WHERE user_id=?";
+      connection.query(updatePasswordSql, [newPassword, userId], (err, result) => {
+        if (err) {
+          console.error("Error updating user password: " + err.stack);
+          res.sendStatus(500);
+        } else {
+          res.json({ message: "User password reset successfully" });
+        }
+      });
     }
   });
 });
