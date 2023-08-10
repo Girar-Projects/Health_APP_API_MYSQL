@@ -29,7 +29,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
+									"raw": "{\n  \"user_id\":2,\n  \"firstName\": \"Test\",\n  \"lastName\": \"Doe\",\n  \"Age\": 30,\n  \"Gender\": \"Female\",\n  \"city\": \"Addis Ababa\",\n  \"subCity\": \"Bole\",\n  \"wereda\": \"Wereda 1\",\n  \"email\": \"jane.doe@example.com\",\n  \"phoneNumber\": \"+251911234567\",\n  \"profession\": \"Software Developer\",\n  \"languages\": \"English, Amharic\",\n  \"Skills\": \"JavaScript, Python, React\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/personal-info",
@@ -84,7 +84,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"firstName\": \"\",\n\t\"lastName\": \"\",\n\t\"Age\": \"\",\n\t\"Gender\": \"\",\n\t\"city\": \"\",\n\t\"subCity\": \"\",\n\t\"wereda\": \"\",\n\t\"email\": \"\",\n\t\"phoneNumber\": \"\",\n\t\"profession\": \"\",\n\t\"languages\": \"\",\n\t\"Skills\": \"\"\n}"
+									"raw": "{\n  \"user_id\":3,\n  \"firstName\": \"Testing\",\n  \"lastName\": \"Doe\",\n  \"Age\": 30,\n  \"Gender\": \"Female\",\n  \"city\": \"Addis Ababa\",\n  \"subCity\": \"Bole\",\n  \"wereda\": \"Wereda 1\",\n  \"email\": \"jane.doe@example.com\",\n  \"phoneNumber\": \"0911234567\",\n  \"profession\": \"Software Developer\",\n  \"languages\": \"English, Amharic\",\n  \"Skills\": \"JavaScript, Python, React\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/personal-info/:id",
@@ -98,7 +98,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "4"
 										}
 									]
 								}
@@ -149,7 +150,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
+									"raw": "{\n  \"educationLevel\": \"Bachelor's Degree\",\n  \"workExperienceYear\": 3,\n  \"employerName\": \"DCC Company\",\n  \"positionHeld\": \"Software Developer\",\n  \"startingDate\": \"2018-01-01\",\n  \"endingDate\": \"2021-01-01\",\n  \"mainResponsibilities\": \"Developed and maintained web applications\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/edu-work-experience/:id",
@@ -163,7 +164,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "1"
 										}
 									]
 								}
@@ -192,7 +194,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "1"
 										}
 									]
 								}
@@ -215,22 +218,17 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"educationLevel\": \"\",\n\t\"workExperienceYear\": \"\",\n\t\"employerName\": \"\",\n\t\"positionHeld\": \"\",\n\t\"startingDate\": \"\",\n\t\"endingDate\": \"\",\n\t\"mainResponsibilities\": \"\"\n}"
+									"raw": "{\n  \"educationLevel\": \"Bachelor's Degrees\",\n  \"workExperienceYear\": 3,\n  \"employerName\": \"ABC Company\",\n  \"positionHeld\": \"Software Developer\",\n  \"startingDate\": \"2018-01-01\",\n  \"endingDate\": \"2021-01-01\",\n  \"mainResponsibilities\": \"Developed and maintained web applications\"\n}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/professional/edu-work-experience/:id",
+									"raw": "{{baseUrl}}/professional/edu-work-experience/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"professional",
 										"edu-work-experience",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id"
-										}
+										"1"
 									]
 								}
 							},
@@ -257,7 +255,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"documentTitle\": \"\",\n\t\"documentPath\": \"\"\n}"
+									"raw": "{\n\t\"documentTitle\": \"Testing\",\n\t\"documentPath\": \"adfasdf\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/documents/:id",
@@ -271,7 +269,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "1"
 										}
 									]
 								}
@@ -300,7 +299,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "1"
 										}
 									]
 								}
@@ -328,7 +328,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
+									"raw": "{\n\t\"professionalId\": \"1\",\n\t\"jobId\": \"2\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/apply",
@@ -387,7 +387,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"professionalId\": \"\",\n\t\"jobId\": \"\"\n}"
+									"raw": "{\n\t\"professionalId\": \"1\",\n\t\"jobId\": \"2\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/professional/bookmark",
@@ -445,9 +445,17 @@
 										"bookmark",
 										":id"
 									],
+									"query": [
+										{
+											"key": null,
+											"value": "",
+											"disabled": true
+										}
+									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "1"
 										}
 									]
 								}
@@ -476,7 +484,8 @@
 									],
 									"variable": [
 										{
-											"key": "professionalId"
+											"key": "professionalId",
+											"value": "1"
 										}
 									]
 								}
@@ -537,7 +546,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"My Organization\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
+									"raw": "{\n    \"name\": \"My Organization23\",\n    \"type\": \"healthcare\",\n    \"email\": \"myorg@healthcare.com\",\n    \"phoneNumber\": \"+251912345678\",\n    \"city\": \"Addis Ababa\",\n    \"subCity\": \"Bole\",\n    \"wereda\": \"01\",\n    \"houseNo\": \"123\",\n    \"tinNo\": \"0123456\",\n    \"contactPersonName\": \"John Doe\",\n    \"contactPersonPosition\": \"CEO\",\n    \"contactPersonNumber\": \"+251912345678\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/organization/organization-info",
@@ -567,14 +576,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/organization/organization-info/1",
+									"raw": "{{baseUrl}}/organization/organization-info/3",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"organization",
 										"organization-info",
-										"1"
+										"3"
 									]
 								}
 							},
@@ -757,13 +766,14 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/organization/my-jobs/1",
+									"raw": "{{baseUrl}}/organization/my-jobs/all/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"organization",
 										"my-jobs",
+										"all",
 										"1"
 									]
 								}
@@ -786,7 +796,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"organizationId\": 1,\n    \"jobPosition\": \"Nurse\",\n    \"salary\": \"10,000\",\n    \"deadline\": \"2022-01-01\",\n    \"jobType\": \"Full-Time\",\n    \"numberOfEmployees\": 5,\n    \"prerequisites\": \"Diploma in Nursing\",\n    \"descriptions\": \"Would like to hire nurses for our hospital\",\n    \"rolesAndResponsibilities\": \"Providing patient care\"\n}"
+									"raw": "{\n  \"organizationId\": 2,\n  \"jobPosition\": \"Nurse\",\n  \"salary\": \"11,000\",\n  \"deadline\": \"2022-01-01\",\n  \"jobType\": \"Full-Time\",\n  \"experienceLevel\": \"Mid-Level\",\n  \"workLocation\": \"New York\",\n  \"category\": \"Healthcare\",\n  \"numberOfEmployees\": 5,\n  \"prerequisites\": \"Diploma in Nursing\",\n  \"descriptions\": \"We are seeking an experienced Registered Nurse to join our growing team.\",\n  \"rolesAndResponsibilities\": \"Provide quality nursing care to patients, collaborate with other healthcare professionals, maintain accurate patient records.\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/organization/my-jobs",
@@ -913,7 +923,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"pro@test.com\",\n    \"password\": \"test\"\n}"
+							"raw": "{\n    \"email\": \"pro@test.com\",\n    \"password\": \"Test\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/login",
@@ -1007,6 +1017,33 @@
 							],
 							"path": [
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"Test\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update-password/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update-password",
+								"1"
 							]
 						}
 					},
