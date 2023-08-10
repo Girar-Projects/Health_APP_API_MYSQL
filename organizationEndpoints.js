@@ -291,19 +291,19 @@ router.post("/my-jobs", authenticate, (req, res) => {
   }
 
   // Validate the salary field
-  if (!/^\d{1,3}(,\d{3})*(\.\d+)?$/.test(data.salary)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid salary format", statusCode: 400 });
-  }
+  // if (!/^\d{1,3}(,\d{3})*(\.\d+)?$/.test(data.salary)) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Invalid salary format", statusCode: 400 });
+  // }
 
   // Validate the deadline field
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.deadline)) {
-    return res.status(400).json({
-      message: "Invalid deadline format (YYYY-MM-DD)",
-      statusCode: 400,
-    });
-  }
+  // if (!/^\d{4}-\d{2}-\d{2}$/.test(data.deadline)) {
+  //   return res.status(400).json({
+  //     message: "Invalid deadline format (YYYY-MM-DD)",
+  //     statusCode: 400,
+  //   });
+  // }
 
   if (req.user.type !== "organization") {
     return res.status(403).json({ message: "Access denied", statusCode: 403 });
