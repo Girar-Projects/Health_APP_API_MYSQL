@@ -9,6 +9,11 @@ const connection = mysql.createConnection({
   // user: "root",
   // password: "",
   // database: "testing",
+
+  // host: "185.27.134.10",
+  // user: "if0_34598054",
+  // password: "mbauLYEO8t",
+  // database: "if0_34598054_health_app",
 });
 
 connection.connect((err) => {

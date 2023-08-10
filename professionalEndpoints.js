@@ -12,9 +12,16 @@ router.post("/personal-info", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
+    // Check if user_id field is present and has a valid value
+    if (!data.user_id || isNaN(data.user_id)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid user ID", statusCode: 400 });
+    }
+
     connection.query(
       "SELECT * FROM HealthProfessional WHERE user_id=?",
-      [req.user.user_id],
+      [data.user_id],
       (err, results) => {
         if (err)
           return queryError(
@@ -25,10 +32,37 @@ router.post("/personal-info", authenticate, (req, res) => {
         if (results.length > 0) {
           res.status(400).json({ message: "Professional already exists" });
         } else {
+          // Validate input
+          if (
+            !data.firstName ||
+            !data.lastName ||
+            !data.Age ||
+            !data.Gender ||
+            !data.city ||
+            !data.subCity ||
+            !data.wereda ||
+            !data.email ||
+            !data.phoneNumber ||
+            !data.profession ||
+            !data.languages ||
+            !data.Skills
+          ) {
+            return res
+              .status(400)
+              .json({ message: "Missing required field(s)", statusCode: 400 });
+          }
+
+          // Validate the email field
+          // if (!/\S+@\S+\.\S+/.test(data.email)) {
+          //   return res
+          //     .status(400)
+          //     .json({ message: "Invalid email format", statusCode: 400 });
+          // }
+
           connection.query(
             "INSERT INTO HealthProfessional (user_id, firstName, lastName, Age, Gender, city, subCity, wereda, email, phoneNumber, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-              req.user.user_id,
+              data.user_id,
               data.firstName,
               data.lastName,
               data.Age,
@@ -49,13 +83,11 @@ router.post("/personal-info", authenticate, (req, res) => {
                   err,
                   "Failed to create professional profile"
                 );
-              res
-                .status(200)
-                .json({
-                  message: "Professional created successfully",
-                  status: 200,
-                  totalCount: 1,
-                });
+              res.status(200).json({
+                message: "Professional created successfully",
+                status: 200,
+                totalCount: 1,
+              });
             }
           );
         }
@@ -86,6 +118,7 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
 });
 
 //Update Single Professional
+// Update Single Professional
 router.put("/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
@@ -93,6 +126,34 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
+    // Validate input
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "Missing id parameter", statusCode: 400 });
+    }
+
+    // Validate the Age field
+    if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid age format", statusCode: 400 });
+    }
+
+    // Validate the phoneNumber field
+    // if (data.phoneNumber && !/^\d{12}$/.test(data.phoneNumber)) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Invalid phone number format", statusCode: 400 });
+    // }
+
+    // Validate the email field
+    if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid email format", statusCode: 400 });
+    }
+
     connection.query(
       "UPDATE HealthProfessional SET firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, phoneNumber=?, profession=?, languages=?, Skills=? WHERE id=? AND user_id=?",
       [
@@ -114,13 +175,11 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
       (err) => {
         if (err)
           return queryError(res, err, "Failed to update professional profile");
-        res
-          .status(200)
-          .json({
-            message: "Personal info updated successfully",
-            status: 200,
-            totalCount: 1,
-          });
+        res.status(200).json({
+          message: "Personal info updated successfully",
+          status: 200,
+          totalCount: 1,
+        });
       }
     );
   }
@@ -257,13 +316,11 @@ router.post("/documents/:id", authenticate, (req, res) => {
       [data.documentTitle, data.documentPath, id],
       (err) => {
         if (err) return queryError(res, err, "Failed to add new document path");
-        res
-          .status(200)
-          .json({
-            message: "Document added successfully",
-            status: 200,
-            totalCount: 1,
-          });
+        res.status(200).json({
+          message: "Document added successfully",
+          status: 200,
+          totalCount: 1,
+        });
       }
     );
   }
@@ -298,6 +355,13 @@ router.post("/apply", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
+    // Validate input
+    if (!data.professionalId || !data.jobId) {
+      return res
+        .status(400)
+        .json({ message: "Missing required field(s)", statusCode: 400 });
+    }
+
     connection.query(
       "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
       [data.professionalId, data.jobId],
@@ -348,13 +412,11 @@ router.post("/bookmark", authenticate, (req, res) => {
       [data.professionalId, data.jobId],
       (err) => {
         if (err) return queryError(res, err, "Failed to add bookmarked job");
-        res
-          .status(200)
-          .json({
-            message: "Bookmark Added successfully",
-            status: 200,
-            totalCount: 1,
-          });
+        res.status(200).json({
+          message: "Bookmark Added successfully",
+          status: 200,
+          totalCount: 1,
+        });
       }
     );
   }
@@ -421,24 +483,36 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
 });
 
 // Delete a bookmarked job
+// Delete a bookmarked job
 router.delete("/bookmark/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
+    // Validate input
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: "Missing id parameter", statusCode: 400 });
+    }
+
     connection.query(
       "DELETE FROM Bookmarks WHERE id=?",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to delete bookmarked job");
-        res
-          .status(200)
-          .json({
-            message: "Bookmark Removed successfully",
-            status: 200,
-            totalCount: 1,
-          });
+        // Validate the result
+        if (results.affectedRows === 0) {
+          return res
+            .status(404)
+            .json({ message: "Bookmark not found", statusCode: 404 });
+        }
+        res.status(200).json({
+          message: "Bookmark removed successfully",
+          status: 200,
+          totalCount: 1,
+        });
       }
     );
   }

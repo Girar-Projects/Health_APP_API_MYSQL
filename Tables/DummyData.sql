@@ -22,9 +22,9 @@ INSERT INTO JobOffers (OfferID, RequestID, ProffesionalID, OfferDate, OfferStatu
 (3, 2, 3, '2021-09-15', 'active', 2);
 
 INSERT INTO JobPosts (JobID, OrganizationID, JobPosition, Salary, Deadline, JobType, ExperienceLevel, WorkLocation, Category, NumberOfEmployees, Prerequisites, Descriptions, RolesAndResponsibilities) VALUES 
-(1, 1, 'Nurse', 4000, '2021-09-15', 'Full-time', 'Experienced', 'Amsterdam', 'Medical', 10, 'Bachelor in nursing required', 'We are looking for a skilled and experienced nurse to join our team at the Amsterdam Medical Center', 'Responsibilities include administering medication, taking vital signs, and providing emotional support to patients.'),
-(2, 1, 'Medical Doctor', 8000, '2021-10-01', 'Full-time', 'Experienced', 'Amsterdam', 'Medical', 5, 'MD required', 'We are seeking an experienced medical doctor to lead our team at the Amsterdam Medical Center', 'Responsibilities include oversight of patient care, management of medical staff, and ensuring compliance with healthcare regulations.'),
-(3, 2, 'Emergency Response Coordinator', 5000, '2021-09-30', 'Full-time', 'Entry-level', 'Amsterdam', 'NGO', 3, 'None', 'The Amsterdam Red Cross is searching for a skilled emergency response coordinator to help us with our humanitarian mission', 'Responsibilities include liaison with donors, coordination of field activities, and analysis of humanitarian needs.');
+(1, 1, 'Nurse', 4000.00, '2021-09-15', 'Full-time', 'Experienced', 'Amsterdam', 'Medical', 10, 'Bachelor in nursing required', 'We are looking for a skilled and experienced nurse to join our team at the Amsterdam Medical Center', 'Responsibilities include administering medication, taking vital signs, and providing emotional support to patients.'),
+(2, 1, 'Medical Doctor', 8000.00, '2021-10-01', 'Full-time', 'Experienced', 'Amsterdam', 'Medical', 5, 'MD required', 'We are seeking an experienced medical doctor to lead our team at the Amsterdam Medical Center', 'Responsibilities include oversight of patient care, management of medical staff, and ensuring compliance with healthcare regulations.'),
+(3, 2, 'Emergency Response Coordinator', 5000.00, '2021-09-30', 'Full-time', 'Entry-level', 'Amsterdam', 'NGO', 3, 'None', 'The Amsterdam Red Cross is searching for a skilled emergency response coordinator to help us with our humanitarian mission', 'Responsibilities include liaison with donors, coordination of field activities, and analysis of humanitarian needs.');
 
 INSERT INTO Bookmarks (professionalId, jobId) VALUES 
 (1, 3),

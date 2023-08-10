@@ -9,35 +9,61 @@ router.post("/organization-info", authenticate, (req, res) => {
   const data = req.body;
 
   if (req.user.type !== "organization") {
-    res.status(403).json({ message: "Access denied" , statusCode: 403 });
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
-    connection.query(
-      "INSERT INTO HealthOrganization (user_id, OrganizationName, OrganizationType, EmailAddress, PhoneNumber, city, subCity, wereda, houseNo, tinNo, ContactPerson_Name, ContactPerson_Position, ContactPerson_Number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        req.user.id,
-        data.name,
-        data.type,
-        data.email,
-        data.phoneNumber,
-        data.city,
-        data.subCity,
-        data.wereda,
-        data.houseNo,
-        data.tinNo,
-        data.contactPersonName,
-        data.contactPersonPosition,
-        data.contactPersonNumber,
-      ],
-      (err) => {
-        if (err) return queryError(res, err, "Failed to Add organization info");
+    // Check if required fields are missing
+    if (
+      !data.name ||
+      !data.type ||
+      !data.email ||
+      !data.phoneNumber ||
+      !data.city ||
+      !data.subCity ||
+      !data.wereda ||
+      !data.houseNo ||
+      !data.tinNo ||
+      !data.contactPersonName ||
+      !data.contactPersonPosition ||
+      !data.contactPersonNumber
+    ) {
+      res
+        .status(400)
+        .json({ message: "Missing required fields", statusCode: 400 });
+    } else {
+      // Check if email format is valid
+      if (!/\S+@\S+\.\S+/.test(data.email)) {
         res
-          .status(200)
-          .json({
-            message: "Organization info added successfully",
-            statusCode: 200,
-          });
+          .status(400)
+          .json({ message: "Invalid email format", statusCode: 400 });
+      } else {
+        connection.query(
+          "INSERT INTO HealthOrganization (user_id, OrganizationName, OrganizationType, EmailAddress, PhoneNumber, city, subCity, wereda, houseNo, tinNo, ContactPerson_Name, ContactPerson_Position, ContactPerson_Number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          [
+            req.user.id,
+            data.name,
+            data.type,
+            data.email,
+            data.phoneNumber,
+            data.city,
+            data.subCity,
+            data.wereda,
+            data.houseNo,
+            data.tinNo,
+            data.contactPersonName,
+            data.contactPersonPosition,
+            data.contactPersonNumber,
+          ],
+          (err) => {
+            if (err)
+              return queryError(res, err, "Failed to Add organization info");
+            res.status(200).json({
+              message: "Organization info added successfully",
+              statusCode: 200,
+            });
+          }
+        );
       }
-    );
+    }
   }
 });
 
@@ -59,13 +85,11 @@ router.get("/organization-info/:id", authenticate, (req, res) => {
             .status(404)
             .json({ message: "Organization not found", statusCode: 404 });
         } else {
-          res
-            .status(200)
-            .json({
-              data: results[0],
-              totalCount: results.length,
-              statusCode: 200,
-            });
+          res.status(200).json({
+            data: results[0],
+            totalCount: results.length,
+            statusCode: 200,
+          });
         }
       }
     );
@@ -80,34 +104,59 @@ router.put("/organization-info/:id", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
-    connection.query(
-      "UPDATE HealthOrganization SET OrganizationName=?, OrganizationType=?, EmailAddress=?, PhoneNumber=?, city=?, subCity=?, wereda=?, houseNo=?, tinNo=?, ContactPerson_Name=?, ContactPerson_Position=?, ContactPerson_Number=? WHERE OrganizationID=?",
-      [
-        data.name,
-        data.type,
-        data.email,
-        data.phoneNumber,
-        data.city,
-        data.subCity,
-        data.wereda,
-        data.houseNo,
-        data.tinNo,
-        data.contactPersonName,
-        data.contactPersonPosition,
-        data.contactPersonNumber,
-        id,
-      ],
-      (err) => {
-        if (err)
-          return queryError(res, err, "Failed to update organization info");
+    // Check if required fields are missing
+    if (
+      !data.name ||
+      !data.type ||
+      !data.email ||
+      !data.phoneNumber ||
+      !data.city ||
+      !data.subCity ||
+      !data.wereda ||
+      !data.houseNo ||
+      !data.tinNo ||
+      !data.contactPersonName ||
+      !data.contactPersonPosition ||
+      !data.contactPersonNumber
+    ) {
+      res
+        .status(400)
+        .json({ message: "Missing required fields", statusCode: 400 });
+    } else {
+      // Check if email format is valid
+      if (!/\S+@\S+\.\S+/.test(data.email)) {
         res
-          .status(200)
-          .json({
-            message: "Organization info updated successfully",
-            statusCode: 200,
-          });
+          .status(400)
+          .json({ message: "Invalid email format", statusCode: 400 });
+      } else {
+        connection.query(
+          "UPDATE HealthOrganization SET OrganizationName=?, OrganizationType=?, EmailAddress=?, PhoneNumber=?, city=?, subCity=?, wereda=?, houseNo=?, tinNo=?, ContactPerson_Name=?, ContactPerson_Position=?, ContactPerson_Number=? WHERE OrganizationID=?",
+          [
+            data.name,
+            data.type,
+            data.email,
+            data.phoneNumber,
+            data.city,
+            data.subCity,
+            data.wereda,
+            data.houseNo,
+            data.tinNo,
+            data.contactPersonName,
+            data.contactPersonPosition,
+            data.contactPersonNumber,
+            id,
+          ],
+          (err) => {
+            if (err)
+              return queryError(res, err, "Failed to update organization info");
+            res.status(200).json({
+              message: "Organization info updated successfully",
+              statusCode: 200,
+            });
+          }
+        );
       }
-    );
+    }
   }
 });
 
@@ -121,16 +170,23 @@ router.post("/documents/:uid", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
-    connection.query(
-      "INSERT INTO LegalDocs (OrganizationID, documentName, documentPath) VALUES (?, ?, ?)",
-      [uid, data.documentName, data.documentPath],
-      (err) => {
-        if (err) return queryError(res, err, "Failed to add new document");
-        res
-          .status(200)
-          .json({ message: "Document added successfully", statusCode: 200 });
-      }
-    );
+    // Check if required fields are missing
+    if (!data.documentName || !data.documentPath) {
+      res
+        .status(400)
+        .json({ message: "Missing required fields", statusCode: 400 });
+    } else {
+      connection.query(
+        "INSERT INTO LegalDocs (OrganizationID, documentName, documentPath) VALUES (?, ?, ?)",
+        [uid, data.documentName, data.documentPath],
+        (err) => {
+          if (err) return queryError(res, err, "Failed to add new document");
+          res
+            .status(200)
+            .json({ message: "Document added successfully", statusCode: 200 });
+        }
+      );
+    }
   }
 });
 
@@ -192,7 +248,7 @@ router.get("/professional/:id", authenticate, (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // List All Jobs Posted By Org
-router.get("/my-jobs/:id", authenticate, (req, res) => {
+router.get("/my-jobs/all/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "organization") {
@@ -215,33 +271,73 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
 router.post("/my-jobs", authenticate, (req, res) => {
   const data = req.body;
 
-  if (req.user.type !== "organization") {
-    res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
-    connection.query(
-      "INSERT INTO JobPosts (organizationId, jobPosition, salary, deadline, jobType, numberOfEmployees, prerequisites,Descriptions, rolesAndResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.organizationId,
-        data.jobPosition,
-        data.salary,
-        data.deadline,
-        data.jobType,
-        data.numberOfEmployees,
-        data.prerequisites,
-        data.descriptions,
-        data.rolesAndResponsibilities,
-      ],
-      (err) => {
-        if (err) return queryError(res, err, "Failed to create job post");
-        res
-          .status(200)
-          .json({
-            message: "Job posting created successfully",
-            statusCode: 200,
-          });
-      }
-    );
+  // Validate input
+  if (
+    !data.organizationId ||
+    !data.jobPosition ||
+    !data.salary ||
+    !data.deadline ||
+    !data.jobType ||
+    !data.experienceLevel ||
+    !data.workLocation ||
+    !data.category ||
+    !data.numberOfEmployees ||
+    !data.prerequisites ||
+    !data.rolesAndResponsibilities
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Missing required field(s)", statusCode: 400 });
   }
+
+  // Validate the salary field
+  if (!/^\d{1,3}(,\d{3})*(\.\d+)?$/.test(data.salary)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid salary format", statusCode: 400 });
+  }
+
+  // Validate the deadline field
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.deadline)) {
+    return res.status(400).json({
+      message: "Invalid deadline format (YYYY-MM-DD)",
+      statusCode: 400,
+    });
+  }
+
+  if (req.user.type !== "organization") {
+    return res.status(403).json({ message: "Access denied", statusCode: 403 });
+  }
+
+  connection.query(
+    "INSERT INTO JobPosts (organizationId, jobPosition, salary, deadline, jobType, experienceLevel, workLocation, category, numberOfEmployees, prerequisites, descriptions, rolesAndResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      data.organizationId,
+      data.jobPosition,
+      data.salary,
+      data.deadline,
+      data.jobType,
+      data.experienceLevel,
+      data.workLocation,
+      data.category,
+      data.numberOfEmployees,
+      data.prerequisites,
+      data.descriptions,
+      data.rolesAndResponsibilities,
+    ],
+    (err) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Failed to create job posting", statusCode: 500 });
+      }
+      res.status(200).json({
+        message: "Job posting created successfully",
+        statusCode: 200,
+      });
+    }
+  );
 });
 
 // Get a single Job Post By ID
@@ -251,12 +347,23 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
-    connection.query("SELECT FROM JobPosts WHERE id=?", [id], (err) => {
-      if (err) return queryError(res, err, "Failed to fetch job posting");
-      res
-        .status(200)
-        .json({ message: "Job posting fetched successfully", statusCode: 200 });
-    });
+    connection.query(
+      "SELECT * FROM JobPosts WHERE JobID=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to fetch job posting");
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ message: "Job posting not found", statusCode: 404 });
+        }
+        res.status(200).json({
+          message: "Job posting fetched successfully",
+          statusCode: 200,
+          data: results[0],
+        });
+      }
+    );
   }
 });
 
@@ -268,6 +375,36 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
+    // Validate input
+    if (
+      !data.jobPosition ||
+      !data.salary ||
+      !data.deadline ||
+      !data.jobType ||
+      !data.numberOfEmployees ||
+      !data.prerequisites ||
+      !data.rolesAndResponsibilities
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Missing required field(s)", statusCode: 400 });
+    }
+
+    // Validate the salary field
+    if (!/^\d{1,3}(,\d{3})*(\.\d+)?$/.test(data.salary)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid salary format", statusCode: 400 });
+    }
+
+    // Validate the deadline field
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(data.deadline)) {
+      return res.status(400).json({
+        message: "Invalid deadline format (YYYY-MM-DD)",
+        statusCode: 400,
+      });
+    }
+
     connection.query(
       "UPDATE JobPosts SET jobPosition=?, salary=?, deadline=?, jobType=?, numberOfEmployees=?, prerequisites=?, Descriptions=?, rolesAndResponsibilities=? WHERE id=? AND organizationId=?",
       [
@@ -284,12 +421,10 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
       ],
       (err) => {
         if (err) return queryError(res, err, "Failed to update job posting");
-        res
-          .status(200)
-          .json({
-            message: "Job posting updated successfully",
-            statusCode: 200,
-          });
+        res.status(200).json({
+          message: "Job posting updated successfully",
+          statusCode: 200,
+        });
       }
     );
   }
@@ -306,13 +441,145 @@ router.get("/applied/:id", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
-      "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.id WHERE JobPosts.organizationId=?",
+      "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.JobID WHERE JobPosts.organizationId=?",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to list job applications");
         res
           .status(200)
           .json({ data: results, totalCount: results.length, statusCode: 200 });
+      }
+    );
+  }
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Bookmarks  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// List all bookmarks of a professional
+router.get("/bookmarks/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM Bookmarks JOIN JobPosts ON Bookmarks.jobId = JobPosts.id WHERE Bookmarks.professionalId=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to list bookmarks");
+        res
+          .status(200)
+          .json({ data: results, totalCount: results.length, statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Add a new bookmark for a professional
+router.post("/bookmarks", authenticate, (req, res) => {
+  const data = req.body;
+
+  if (
+    req.user.type !== "professional" ||
+    req.user.id !== parseInt(data.professionalId)
+  ) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?, ?)",
+      [data.professionalId, data.jobId],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to add bookmark");
+        res
+          .status(200)
+          .json({ message: "Bookmark added successfully", statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Remove a bookmark for a professional
+router.delete("/bookmarks/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "DELETE FROM Bookmarks WHERE id=? AND professionalId=?",
+      [id, req.user.id],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to remove bookmark");
+        res
+          .status(200)
+          .json({ message: "Bookmark removed successfully", statusCode: 200 });
+      }
+    );
+  }
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// List all applications of a professional
+router.get("/applications/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.id WHERE Applications.professionalId=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to list applications");
+        res
+          .status(200)
+          .json({ data: results, totalCount: results.length, statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Submit a new application for a job
+router.post("/applications", authenticate, (req, res) => {
+  const data = req.body;
+
+  if (
+    req.user.type !== "professional" ||
+    req.user.id !== parseInt(data.professionalId)
+  ) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
+      [data.professionalId, data.jobId],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to submit application");
+        res.status(200).json({
+          message: "Application submitted successfully",
+          statusCode: 200,
+        });
+      }
+    );
+  }
+});
+
+// Withdraw an application
+router.delete("/applications/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "DELETE FROM Applications WHERE id=? AND professionalId=?",
+      [id, req.user.id],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to withdraw application");
+        res.status(200).json({
+          message: "Application withdrawn successfully",
+          statusCode: 200,
+        });
       }
     );
   }
