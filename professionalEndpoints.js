@@ -523,11 +523,18 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
 // List All Jobs Posted By Org
 router.get("/my-jobs", authenticate, (req, res) => {
   const id = req.params.id;
+  const category = req.query.category; // retrieve category parameter from request
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
-    connection.query("SELECT * FROM JobPosts", [id], (err, results) => {
+    let query = "SELECT * FROM JobPosts";
+    let values = [id];
+    if (category) { // if category parameter is passed, add WHERE clause
+      query += " WHERE Category = ?";
+      values.push(category);
+    }
+    connection.query(query, values, (err, results) => {
       if (err) return queryError(res, err, "Failed to fetch job postings");
       res
         .status(200)
@@ -535,6 +542,8 @@ router.get("/my-jobs", authenticate, (req, res) => {
     });
   }
 });
+
+
 
 // Get a single Job Post By ID
 router.get("/my-jobs/:id", authenticate, (req, res) => {

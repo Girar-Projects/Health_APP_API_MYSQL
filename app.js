@@ -140,14 +140,14 @@ app.post("/register", (req, res) => {
     if (err) {
       console.error("Error checking if email exists: " + err.stack);
       return res.status(500).json({
-        code: "500",
+        code: 500,
         status: "error",
         message: "Internal server error, Please try again later.",
       });
     }
     if (result.length > 0) {
       return res.status(409).json({
-        code: "409",
+        code: 409,
         status: "error",
         message: "Email is already registered",
       });
@@ -170,7 +170,7 @@ app.post("/register", (req, res) => {
         if (err) {
           console.error("Error registering new user: " + err.stack);
           return res.status(500).json({
-            code: "500",
+            code: 500,
             status: "error",
             message: "Internal server error, Could not register User.",
           });
@@ -183,7 +183,7 @@ app.post("/register", (req, res) => {
           });
 
           return res.status(201).json({
-            code: "200",
+            code: 200,
             status: "success",
             message: "User registered successfully",
             user_id: userId,
@@ -211,7 +211,11 @@ app.put("/update-password/:user_id", (req, res) => {
   if (!user_id || !newPassword) {
     res
       .status(400)
-      .json({ status: "fail", message: "userId and newPassword are required" });
+      .json({
+        code: 400,
+        status: "fail",
+        message: "userId and newPassword are required",
+      });
     return;
   }
 
@@ -223,7 +227,7 @@ app.put("/update-password/:user_id", (req, res) => {
     } else if (results.length === 0) {
       res
         .status(404)
-        .json({ code: "404", status: "fail", message: "User not found" });
+        .json({ code: 404, status: "fail", message: "User not found" });
     } else {
       const updatePasswordSql = "UPDATE users SET password=? WHERE user_id=?";
       connection.query(
@@ -235,7 +239,7 @@ app.put("/update-password/:user_id", (req, res) => {
             res.sendStatus(500);
           } else {
             res.status(200).json({
-              StatusCode: "200",
+              StatusCode: 200,
               status: "success",
               message: "User password reset successfully",
             });
