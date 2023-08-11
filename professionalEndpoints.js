@@ -42,7 +42,6 @@ router.post("/personal-info", authenticate, (req, res) => {
             !data.subCity ||
             !data.wereda ||
             !data.email ||
-            !data.phoneNumber ||
             !data.profession ||
             !data.languages ||
             !data.Skills
@@ -59,8 +58,16 @@ router.post("/personal-info", authenticate, (req, res) => {
           //     .json({ message: "Invalid email format", statusCode: 400 });
           // }
 
+          
+    // Validate the Age field
+    if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid age format", statusCode: 400 });
+    }
+
           connection.query(
-            "INSERT INTO HealthProfessional (user_id, firstName, lastName, Age, Gender, city, subCity, wereda, email, phoneNumber, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO HealthProfessional (user_id, firstName, lastName, Age, Gender, city, subCity, wereda, email, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
               data.user_id,
               data.firstName,
@@ -71,7 +78,6 @@ router.post("/personal-info", authenticate, (req, res) => {
               data.subCity,
               data.wereda,
               data.email,
-              data.phoneNumber,
               data.profession,
               data.languages,
               data.Skills,
@@ -117,7 +123,7 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
   }
 });
 
-//Update Single Professional
+
 // Update Single Professional
 router.put("/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
@@ -148,14 +154,15 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
     // }
 
     // Validate the email field
-    if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid email format", statusCode: 400 });
-    }
+
+    // if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Invalid email format", statusCode: 400 });
+    // }
 
     connection.query(
-      "UPDATE HealthProfessional SET firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, phoneNumber=?, profession=?, languages=?, Skills=? WHERE id=? AND user_id=?",
+      "UPDATE HealthProfessional SET firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, profession=?, languages=?, Skills=? WHERE id=? AND user_id=?",
       [
         data.firstName,
         data.lastName,
@@ -165,7 +172,6 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
         data.subCity,
         data.wereda,
         data.email,
-        data.phoneNumber,
         data.profession,
         data.languages,
         data.Skills,
@@ -521,7 +527,7 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // List All Jobs Posted By Org
-router.get("/my-jobs", authenticate, (req, res) => {
+router.get("/job-posts", authenticate, (req, res) => {
   const id = req.params.id;
   const category = req.query.category; // retrieve category parameter from request
 
@@ -548,7 +554,7 @@ router.get("/my-jobs", authenticate, (req, res) => {
 });
 
 // Get a single Job Post By ID
-router.get("/my-jobs/:id", authenticate, (req, res) => {
+router.get("/job-posts/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
   if (req.user.type !== "professional") {
@@ -572,6 +578,106 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
       }
     );
   }
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Searching ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// Search Professionals by name
+router.get("/professionals/searchByName", authenticate, (req, res) => {
+  const name = req.query.name;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM HealthProfessional WHERE CONCAT(firstName, ' ', lastName) LIKE ?",
+      ["%" + name + "%"],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to search professionals");
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
+      }
+    );
+  }
+});
+
+// Search job posts
+router.get("/job-posts/search", authenticate, (req, res) => {
+  const q = req.query.q;
+
+  if (!q) {
+    res
+      .status(400)
+      .json({ message: "Search query parameter is required", statusCode: 400 });
+  } else {
+    connection.query(
+      "SELECT * FROM JobPosts WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?",
+      ["%" + q + "%", "%" + q + "%", "%" + q + "%"],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to search for jobs");
+        res
+          .status(200)
+          .json({ data: results, status: 200, totalCount: results.length });
+      }
+    );
+  }
+});
+
+// Advanced Filter job posts (Need to design Filter page)
+// http://localhost:3000/job-posts/search?q=Software%20Engineer&minSalary=50000&maxSalary=100000&location=New%20York&page=1&limit=10
+
+router.get("/job-posts/search", authenticate, (req, res) => {
+  const q = req.query.q || "";
+  const minSalary = parseInt(req.query.minSalary) || 0;
+  const maxSalary = parseInt(req.query.maxSalary) || Infinity;
+  const location = req.query.location || "";
+
+  const searchQuery = `
+    SELECT COUNT(*) AS totalCount FROM JobPosts
+    WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?
+      AND Salary >= ? AND Salary <= ?
+      AND WorkLocation LIKE ?;
+
+    SELECT *,
+      MATCH(JobPosition, ExperienceLevel, Category) AGAINST (?) AS score
+    FROM JobPosts
+    WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?
+      AND Salary >= ? AND Salary <= ?
+      AND WorkLocation LIKE ?
+    ORDER BY score DESC`;
+
+  const searchParams = [
+    q,
+    q,
+    q,
+    minSalary,
+    maxSalary,
+    "%" + location + "%",
+    q,
+    q,
+    q,
+    minSalary,
+    maxSalary,
+    "%" + location + "%",
+  ];
+
+  connection.query(searchQuery, searchParams, (err, results) => {
+    if (err) return queryError(res, err, "Failed to search for jobs");
+
+    const totalCount = results[0][0].totalCount;
+
+    results[1].forEach((result) => {
+      result.relevanceScore = Math.round((result.score / q.length) * 100);
+      delete result.score;
+    });
+
+    res.status(200).json({
+      data: results[1],
+      totalCount,
+      status: 200,
+    });
+  });
 });
 
 module.exports = router;

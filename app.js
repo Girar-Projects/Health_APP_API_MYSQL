@@ -56,6 +56,7 @@ app.post("/login", (req, res) => {
           email: user.email,
           uuid: user.uuid,
           userType: user.user_type,
+          PhoneNumber: phoneNumber,
           token: token,
           paymentStatus: user.paymentStatus,
           profileCreationStatus: user.profileCreationStatus,
@@ -75,6 +76,7 @@ app.post("/register", (req, res) => {
     email,
     password,
     user_type,
+    phoneNumber,
     paymentStatus,
     profileCreationStatus,
     longitude,
@@ -101,7 +103,7 @@ app.post("/register", (req, res) => {
     return res.status(400).json({
       status: "error",
       message:
-        "uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude and latitude are required and should be of the correct data type",
+        "uuid, email, password, user_type, paymentStatus,phoneNumber, profileCreationStatus, longitude and latitude are required and should be of the correct data type",
     });
   }
 
@@ -132,12 +134,13 @@ app.post("/register", (req, res) => {
     } else {
       // Insert the new user into the users table
       const sql =
-        "INSERT INTO users (uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO users (uuid, email, password, user_type,phoneNumber, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
       const values = [
         uuid,
         email,
         password,
         user_type,
+        phoneNumber,
         paymentStatus,
         profileCreationStatus,
         parseFloat(longitude),
@@ -168,6 +171,7 @@ app.post("/register", (req, res) => {
             uuid: uuid,
             email: email,
             userType: user_type,
+            PhoneNumber: phoneNumber,
             token: token,
             paymentStatus: paymentStatus,
             profileCreationStatus: profileCreationStatus,
@@ -226,10 +230,7 @@ app.put("/update-password/:user_id", (req, res) => {
   });
 });
 
-
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Password Reset ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
-
 
 app.put("/update-profile-status/:user_id", (req, res) => {
   const userId = req.params.user_id;
