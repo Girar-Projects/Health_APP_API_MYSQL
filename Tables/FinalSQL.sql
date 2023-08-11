@@ -16,7 +16,7 @@ CREATE TABLE users (
 
 
 CREATE TABLE HealthProfessional (
-  id INT NOT NULL AUTO_INCREMENT,
+  id INT NOT NULL,
   user_id INT NOT NULL,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
@@ -31,13 +31,12 @@ CREATE TABLE HealthProfessional (
   languages VARCHAR(255) NOT NULL,
   Skills VARCHAR(255) NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users (user_id),
-  UNIQUE KEY unique_user_id (user_id),
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
 CREATE TABLE HealthOrganization (
-  OrganizationID INT NOT NULL AUTO_INCREMENT,
-  user_id INT NOT NULL ,
+  OrganizationID INT NOT NULL,
+  user_id INT NOT NULL,
   OrganizationName VARCHAR(255) NOT NULL,
   OrganizationType VARCHAR(255) NOT NULL,
   EmailAddress VARCHAR(255) NOT NULL,  
@@ -51,12 +50,11 @@ CREATE TABLE HealthOrganization (
   ContactPerson_Position VARCHAR(255) NOT NULL,  
   ContactPerson_Number VARCHAR(255) NOT NULL,
   PRIMARY KEY (OrganizationID),
-  FOREIGN KEY (user_id) REFERENCES users (user_id),
-  UNIQUE KEY unique_user_id (user_id),
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
 CREATE TABLE ProfessionalRequest (
-  RequestID INT NOT NULL AUTO_INCREMENT,
+  RequestID INT NOT NULL,
   organizationID INT NOT NULL,
   ProffesionalType VARCHAR(255) NOT NULL,
   RequestDate DATE NOT NULL,
@@ -66,7 +64,7 @@ CREATE TABLE ProfessionalRequest (
 );
 
 CREATE TABLE JobOffers (
-  OfferID INT NOT NULL AUTO_INCREMENT,
+  OfferID INT NOT NULL,
   RequestID INT NOT NULL,
   ProffesionalID INT NOT NULL,
   OfferDate DATE NOT NULL,
@@ -81,11 +79,11 @@ CREATE TABLE JobOffers (
 
 
 CREATE TABLE JobPosts (
-  JobID INT NOT NULL AUTO_INCREMENT,
+  JobID INT NOT NULL,
   OrganizationID INT NOT NULL,
   JobPosition VARCHAR(255) NOT NULL,
-  Salary VARCHAR(255) NOT NULL,
-  Deadline VARCHAR(255) NOT NULL,
+  Salary INT NOT NULL,
+  Deadline DATE NOT NULL,
   JobType VARCHAR(255) NOT NULL,
   ExperienceLevel VARCHAR(255) NOT NULL,
   WorkLocation VARCHAR(255) NOT NULL,
@@ -137,7 +135,7 @@ CREATE TABLE LegalDocs (
 
 
 CREATE TABLE EduWorkExperience (
-  id INT NOT NULL AUTO_INCREMENT,
+  id INT NOT NULL,
   ProfessionalID INT NOT NULL,
   EducationLevel VARCHAR(255) NOT NULL,
   WorkExperienceYear VARCHAR(255) NOT NULL,

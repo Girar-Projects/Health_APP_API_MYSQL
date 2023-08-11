@@ -1,5 +1,6 @@
 const mysql = require("mysql");
-const connection = mysql.createConnection({
+const retry = require("retry");
+const connectionDetails = {
   host: "db4free.net",
   user: "health_testing",
   password: "0919483800",
@@ -14,9 +15,31 @@ const connection = mysql.createConnection({
   // user: "if0_34598054",
   // password: "mbauLYEO8t",
   // database: "if0_34598054_health_app",
-});
+};
 
-connection.connect((err) => {
+function createConnection(callback) {
+  const operation = retry.operation({
+    retries: 25,
+    factor: 3,
+    minTimeout: 1000,
+  });
+
+  operation.attempt((attempt) => {
+    console.log(`Trying to connect to MySQL (attempt ${attempt})...`);
+    const connection = mysql.createConnection(connectionDetails);
+
+    connection.connect((err) => {
+      if (operation.retry(err)) {
+        console.log(`Error connecting to MySQL: ${err}. Retrying...`);
+        return;
+      }
+
+      callback(err, connection);
+    });
+  });
+}
+
+const connection = createConnection((err, connection) => {
   if (err) {
     console.error("Error connecting to database: " + err.stack);
     return;

@@ -13,6 +13,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/professional", professionalEndpoints);
 app.use("/organization", OrganizationEndpoints);
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Database Connectivity Refresh ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+app.post("/refresh-db-connection", (req, res) => {
+  console.log("Refreshing database connection...");
+  connection.destroy();
+  connection.connect((err) => {
+    if (err) {
+      console.error("Error connecting to database: " + err.stack);
+      res.status(500).send("Error connecting to database");
+      return;
+    }
+    console.log("Database connection refreshed successfully");
+    res.send("Database connection refreshed successfully");
+  });
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Login & Token ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 app.post("/login", (req, res) => {
   const data = req.body;
 
@@ -36,6 +53,43 @@ app.post("/login", (req, res) => {
     }
   );
 });
+
+app.post("/login", (req, res) => {
+  const data = req.body;
+
+  connection.query(
+    "SELECT * FROM users WHERE email=? AND BINARY password=?",
+    [data.email, data.password],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing query: " + err.stack);
+        res.sendStatus(500);
+      } else if (results.length === 0) {
+        res.status(401).json({ message: "Invalid email or password" });
+      } else {
+        const user = results[0];
+        const token = jwt.sign(
+          { id: user.user_id, type: user.user_type },
+          secretKey
+        );
+        res.json({
+          statusCode: "200",
+          user_id: user.user_id,
+          email: user.email,
+          uuid: user.uuid,
+          userType: user.user_type,
+          token: token,
+          paymentStatus: user.paymentStatus,
+          profileCreationStatus: user.profileCreationStatus,
+          longitude: user.longitude,
+          latitude: user.latitude,
+        });
+      }
+    }
+  );
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Register ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 
 app.post("/register", (req, res) => {
   const {
@@ -67,7 +121,7 @@ app.post("/register", (req, res) => {
     !profileCreationStatus
   ) {
     return res.status(400).json({
-      statusCode: 400,
+      status: "error",
       message:
         "uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude and latitude are required and should be of the correct data type",
     });
@@ -75,109 +129,81 @@ app.post("/register", (req, res) => {
 
   if (!email.includes("@")) {
     return res.status(400).json({
-      statusCode: 400,
+      status: "error",
       message: "Invalid email address",
     });
   }
 
-  // Insert the new user into the users table
-  const sql =
-    "INSERT INTO users (uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-  const values = [
-    uuid,
-    email,
-    password,
-    user_type,
-    paymentStatus,
-    profileCreationStatus,
-    parseFloat(longitude),
-    parseFloat(latitude),
-  ];
-
-  connection.query(sql, values, (err, result) => {
+  // Check if the email is already registered
+  const sql = "SELECT * FROM users WHERE email = ?";
+  connection.query(sql, [email], (err, result) => {
     if (err) {
-      console.error("Error registering new user: " + err.stack);
+      console.error("Error checking if email exists: " + err.stack);
       return res.status(500).json({
-        statusCode: 500,
-        message: "Internal server error",
+        code: "500",
+        status: "error",
+        message: "Internal server error, Please try again later.",
+      });
+    }
+    if (result.length > 0) {
+      return res.status(409).json({
+        code: "409",
+        status: "error",
+        message: "Email is already registered",
       });
     } else {
-      const userId = result.insertId; // Get the ID of the newly inserted user
+      // Insert the new user into the users table
+      const sql =
+        "INSERT INTO users (uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+      const values = [
+        uuid,
+        email,
+        password,
+        user_type,
+        paymentStatus,
+        profileCreationStatus,
+        parseFloat(longitude),
+        parseFloat(latitude),
+      ];
 
-      // Generate a JWT token for the new user
-      const token = jwt.sign({ id: userId, type: user_type }, secretKey, {
-        expiresIn: "1h",
-      });
+      connection.query(sql, values, (err, result) => {
+        if (err) {
+          console.error("Error registering new user: " + err.stack);
+          return res.status(500).json({
+            code: "500",
+            status: "error",
+            message: "Internal server error, Could not register User.",
+          });
+        } else {
+          const userId = result.insertId; // Get the ID of the newly inserted user
 
-      return res.status(201).json({
-        statusCode: 201,
-        message: "User registered successfully",
-        user_id: userId,
-        token: token,
-        userType: user_type,
+          // Generate a JWT token for the new user
+          const token = jwt.sign({ id: userId, type: user_type }, secretKey, {
+            expiresIn: "1h",
+          });
+
+          return res.status(201).json({
+            code: "200",
+            status: "success",
+            message: "User registered successfully",
+            user_id: userId,
+            uuid: uuid,
+            email: email,
+            userType: user_type,
+            token: token,
+            paymentStatus: paymentStatus,
+            profileCreationStatus: profileCreationStatus,
+            longitude: longitude,
+            latitude: latitude,
+          });
+        }
       });
     }
   });
 });
 
-// app.post("/register", (req, res) => {
-//   const data = req.body;
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Password Reset ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 
-//   console.log(data);
-//   // Perform validation on the request data
-//   if (
-//     typeof data.uuid !== "string" ||
-//     typeof data.email !== "string" ||
-//     typeof data.password !== "string" ||
-//     typeof data.user_type !== "string" ||
-//     typeof data.paymentStatus !== "string" ||
-//     typeof data.profileCreationStatus !== "string" ||
-//     isNaN(parseFloat(data.longitude)) ||
-//     isNaN(parseFloat(data.latitude)) ||
-//     !data.uuid ||
-//     !data.email ||
-//     !data.password ||
-//     !data.user_type ||
-//     !data.paymentStatus ||
-//     !data.profileCreationStatus
-//   ) {
-//     res.status(400).json({
-//       message:
-//         "uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude and latitude are required and should be of the correct data type",
-//     });
-//     return;
-//   }
-
-//   if (!data.email.includes("@")) {
-//     res.status(400).json({ message: "Invalid email address" });
-//     return;
-//   }
-
-//   // Insert the new user into the users table
-//   const sql =
-//     "INSERT INTO users (uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-//   const values = [
-//     data.uuid,
-//     data.email,
-//     data.password,
-//     data.user_type,
-//     data.paymentStatus,
-//     data.profileCreationStatus,
-//     parseFloat(data.longitude),
-//     parseFloat(data.latitude),
-//   ];
-
-//   connection.query(sql, values, (err, result) => {
-//     if (err) {
-//       console.error("Error registering new user: " + err.stack);
-//       res.sendStatus(500);
-//     } else {
-//       res.json({ message: "User registered successfully" });
-//     }
-//   });
-// });
-
-// Endpoint for updating user password
 app.put("/update-password/:user_id", (req, res) => {
   const { user_id } = req.params;
   const { newPassword } = req.body;
@@ -195,7 +221,9 @@ app.put("/update-password/:user_id", (req, res) => {
       console.error("Error executing query: " + err.stack);
       res.sendStatus(500);
     } else if (results.length === 0) {
-      res.status(404).json({ status: "fail", message: "User not found" });
+      res
+        .status(404)
+        .json({ code: "404", status: "fail", message: "User not found" });
     } else {
       const updatePasswordSql = "UPDATE users SET password=? WHERE user_id=?";
       connection.query(
