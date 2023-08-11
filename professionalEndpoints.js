@@ -518,4 +518,49 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
   }
 });
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// List All Jobs Posted By Org
+router.get("/my-jobs", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query("SELECT * FROM JobPosts", [id], (err, results) => {
+      if (err) return queryError(res, err, "Failed to fetch job postings");
+      res
+        .status(200)
+        .json({ data: results, totalCount: results.length, statusCode: 200 });
+    });
+  }
+});
+
+// Get a single Job Post By ID
+router.get("/my-jobs/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM JobPosts WHERE JobID=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to fetch job posting");
+        if (results.length === 0) {
+          return res
+            .status(404)
+            .json({ message: "Job posting not found", statusCode: 404 });
+        }
+        res.status(200).json({
+          message: "Job posting fetched successfully",
+          statusCode: 200,
+          data: results[0],
+        });
+      }
+    );
+  }
+});
+
 module.exports = router;

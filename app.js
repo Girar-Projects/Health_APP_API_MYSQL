@@ -17,7 +17,7 @@ app.post("/login", (req, res) => {
   const data = req.body;
 
   connection.query(
-    "SELECT * FROM users WHERE email=? AND password=?",
+    "SELECT * FROM users WHERE email=? AND BINARY password=?",
     [data.email, data.password],
     (err, results) => {
       if (err) {
@@ -37,9 +37,18 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.post('/register', (req, res) => {
-  const { uuid, email, password, user_type, paymentStatus, profileCreationStatus, longitude, latitude } = req.body;
-  
+app.post("/register", (req, res) => {
+  const {
+    uuid,
+    email,
+    password,
+    user_type,
+    paymentStatus,
+    profileCreationStatus,
+    longitude,
+    latitude,
+  } = req.body;
+
   // Perform validation on the request data
   if (
     typeof uuid !== "string" ||
@@ -65,9 +74,9 @@ app.post('/register', (req, res) => {
   }
 
   if (!email.includes("@")) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       statusCode: 400,
-      message: "Invalid email address" 
+      message: "Invalid email address",
     });
   }
 
@@ -90,24 +99,22 @@ app.post('/register', (req, res) => {
       console.error("Error registering new user: " + err.stack);
       return res.status(500).json({
         statusCode: 500,
-        message: 'Internal server error'
+        message: "Internal server error",
       });
     } else {
       const userId = result.insertId; // Get the ID of the newly inserted user
 
       // Generate a JWT token for the new user
-      const token = jwt.sign(
-        { id: userId, type: user_type },
-        secretKey,
-        { expiresIn: '1h' }
-      );
-            
-      return res.status(201).json({ 
+      const token = jwt.sign({ id: userId, type: user_type }, secretKey, {
+        expiresIn: "1h",
+      });
+
+      return res.status(201).json({
         statusCode: 201,
         message: "User registered successfully",
         user_id: userId,
         token: token,
-        userType: user_type
+        userType: user_type,
       });
     }
   });
@@ -169,8 +176,6 @@ app.post('/register', (req, res) => {
 //     }
 //   });
 // });
-
-
 
 // Endpoint for updating user password
 app.put("/update-password/:user_id", (req, res) => {
