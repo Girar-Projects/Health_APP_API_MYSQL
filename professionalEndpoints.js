@@ -58,13 +58,12 @@ router.post("/personal-info", authenticate, (req, res) => {
           //     .json({ message: "Invalid email format", statusCode: 400 });
           // }
 
-          
-    // Validate the Age field
-    if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid age format", statusCode: 400 });
-    }
+          // Validate the Age field
+          if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
+            return res
+              .status(400)
+              .json({ message: "Invalid age format", statusCode: 400 });
+          }
 
           connection.query(
             "INSERT INTO HealthProfessional (user_id, firstName, lastName, Age, Gender, city, subCity, wereda, email, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -122,7 +121,6 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
     );
   }
 });
-
 
 // Update Single Professional
 router.put("/personal-info/:id", authenticate, (req, res) => {
@@ -580,11 +578,142 @@ router.get("/job-posts/:id", authenticate, (req, res) => {
   }
 });
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Bookmarks  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// List all bookmarks of a professional
+router.get("/bookmarks/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM Bookmarks JOIN JobPosts ON Bookmarks.jobId = JobPosts.id WHERE Bookmarks.professionalId=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to list bookmarks");
+        res
+          .status(200)
+          .json({ data: results, totalCount: results.length, statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Add a new bookmark for a professional
+router.post("/bookmarks", authenticate, (req, res) => {
+  const data = req.body;
+
+  if (
+    req.user.type !== "professional" ||
+    req.user.id !== parseInt(data.professionalId)
+  ) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?, ?)",
+      [data.professionalId, data.jobId],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to add bookmark");
+        res
+          .status(200)
+          .json({ message: "Bookmark added successfully", statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Remove a bookmark for a professional
+router.delete("/bookmarks/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "DELETE FROM Bookmarks WHERE id=? AND professionalId=?",
+      [id, req.user.id],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to remove bookmark");
+        res
+          .status(200)
+          .json({ message: "Bookmark removed successfully", statusCode: 200 });
+      }
+    );
+  }
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Applications  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// List all applications of a professional
+router.get("/applications/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.id WHERE Applications.professionalId=?",
+      [id],
+      (err, results) => {
+        if (err) return queryError(res, err, "Failed to list applications");
+        res
+          .status(200)
+          .json({ data: results, totalCount: results.length, statusCode: 200 });
+      }
+    );
+  }
+});
+
+// Submit a new application for a job
+router.post("/applications", authenticate, (req, res) => {
+  const data = req.body;
+
+  if (
+    req.user.type !== "professional" ||
+    req.user.id !== parseInt(data.professionalId)
+  ) {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
+      [data.professionalId, data.jobId],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to submit application");
+        res.status(200).json({
+          message: "Application submitted successfully",
+          statusCode: 200,
+        });
+      }
+    );
+  }
+});
+
+// Withdraw an application
+router.delete("/applications/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "professional") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else {
+    connection.query(
+      "DELETE FROM Applications WHERE id=? AND professionalId=?",
+      [id, req.user.id],
+      (err, result) => {
+        if (err) return queryError(res, err, "Failed to withdraw application");
+        res.status(200).json({
+          message: "Application withdrawn successfully",
+          statusCode: 200,
+        });
+      }
+    );
+  }
+});
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Searching ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 // Search job posts
-router.get("/job-posts/search", authenticate, (req, res) => {
+router.get("/job-post/simpleSearch", authenticate, (req, res) => {
   const q = req.query.q;
 
   if (!q) {
@@ -605,28 +734,27 @@ router.get("/job-posts/search", authenticate, (req, res) => {
   }
 });
 
-// Advanced Filter job posts (Need to design Filter page)
-// http://localhost:3000/job-posts/search?q=Software%20Engineer&minSalary=50000&maxSalary=100000&location=New%20York&page=1&limit=10
+// Advanced Filter job posts (IN progress)
 
-router.get("/job-posts/search", authenticate, (req, res) => {
+router.get("/filter-job/search", authenticate, (req, res) => {
   const q = req.query.q || "";
   const minSalary = parseInt(req.query.minSalary) || 0;
   const maxSalary = parseInt(req.query.maxSalary) || Infinity;
   const location = req.query.location || "";
 
   const searchQuery = `
-    SELECT COUNT(*) AS totalCount FROM JobPosts
-    WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?
-      AND Salary >= ? AND Salary <= ?
-      AND WorkLocation LIKE ?;
+  SELECT COUNT(*) AS totalCount FROM JobPosts
+  WHERE (JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?)
+    AND Salary >= ? AND Salary <= ?
+    AND WorkLocation LIKE ?;
 
-    SELECT *,
-      MATCH(JobPosition, ExperienceLevel, Category) AGAINST (?) AS score
-    FROM JobPosts
-    WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?
-      AND Salary >= ? AND Salary <= ?
-      AND WorkLocation LIKE ?
-    ORDER BY score DESC`;
+  SELECT *,
+    MATCH(JobPosition, ExperienceLevel, Category) AGAINST (? IN NATURAL LANGUAGE MODE) AS score
+  FROM JobPosts
+  WHERE (JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?)
+    AND Salary >= ? AND Salary <= ?
+    AND WorkLocation LIKE ?
+  ORDER BY score DESC`;
 
   const searchParams = [
     q,
