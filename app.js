@@ -226,6 +226,43 @@ app.put("/update-password/:user_id", (req, res) => {
   });
 });
 
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Password Reset ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+
+app.put("/update-profile-status/:user_id", (req, res) => {
+  const userId = req.params.user_id;
+  const newStatus = req.body.profileCreationStatus;
+
+  connection.query(
+    "UPDATE users SET profileCreationStatus=? WHERE user_id=?",
+    [newStatus, userId],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating profile status: " + err.stack);
+        res.status(500).json({
+          code: 500,
+          status: "error",
+          message: "Could not update profile status",
+        });
+      } else if (result.affectedRows === 0) {
+        res.status(404).json({
+          code: 404,
+          status: "error",
+          message: "User not found",
+        });
+      } else {
+        res.status(200).json({
+          code: 200,
+          status: "success",
+          message: "Profile status updated successfully",
+        });
+      }
+    }
+  );
+});
+
 app.get("/", (req, res) => {
   res.send("Health App server is running.");
 });
