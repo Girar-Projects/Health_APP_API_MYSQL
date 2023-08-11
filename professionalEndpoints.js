@@ -582,25 +582,6 @@ router.get("/job-posts/:id", authenticate, (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Searching ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// Search Professionals by name
-router.get("/professionals/searchByName", authenticate, (req, res) => {
-  const name = req.query.name;
-
-  if (req.user.type !== "professional") {
-    res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
-    connection.query(
-      "SELECT * FROM HealthProfessional WHERE CONCAT(firstName, ' ', lastName) LIKE ?",
-      ["%" + name + "%"],
-      (err, results) => {
-        if (err) return queryError(res, err, "Failed to search professionals");
-        res
-          .status(200)
-          .json({ data: results, status: 200, totalCount: results.length });
-      }
-    );
-  }
-});
 
 // Search job posts
 router.get("/job-posts/search", authenticate, (req, res) => {

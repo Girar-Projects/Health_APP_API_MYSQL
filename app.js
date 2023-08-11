@@ -56,7 +56,7 @@ app.post("/login", (req, res) => {
           email: user.email,
           uuid: user.uuid,
           userType: user.user_type,
-          PhoneNumber: phoneNumber,
+          PhoneNumber: user.phoneNumber,
           token: token,
           paymentStatus: user.paymentStatus,
           profileCreationStatus: user.profileCreationStatus,
