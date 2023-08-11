@@ -30,29 +30,6 @@ app.post("/refresh-db-connection", (req, res) => {
 });
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Login & Token ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
-app.post("/login", (req, res) => {
-  const data = req.body;
-
-  connection.query(
-    "SELECT * FROM users WHERE email=? AND BINARY password=?",
-    [data.email, data.password],
-    (err, results) => {
-      if (err) {
-        console.error("Error executing query: " + err.stack);
-        res.sendStatus(500);
-      } else if (results.length === 0) {
-        res.status(401).json({ message: "Invalid email or password" });
-      } else {
-        const user = results[0];
-        const token = jwt.sign(
-          { id: user.user_id, type: user.user_type },
-          secretKey
-        );
-        res.json({ token, userType: user.user_type, user_id: user.user_id });
-      }
-    }
-  );
-});
 
 app.post("/login", (req, res) => {
   const data = req.body;
@@ -74,6 +51,7 @@ app.post("/login", (req, res) => {
         );
         res.json({
           statusCode: "200",
+          message: "User Has Been Logged In Successfully!",
           user_id: user.user_id,
           email: user.email,
           uuid: user.uuid,
@@ -209,13 +187,11 @@ app.put("/update-password/:user_id", (req, res) => {
   const { newPassword } = req.body;
 
   if (!user_id || !newPassword) {
-    res
-      .status(400)
-      .json({
-        code: 400,
-        status: "fail",
-        message: "userId and newPassword are required",
-      });
+    res.status(400).json({
+      code: 400,
+      status: "fail",
+      message: "userId and newPassword are required",
+    });
     return;
   }
 

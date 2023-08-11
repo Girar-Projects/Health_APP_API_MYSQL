@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b94c29eb-ed4e-453d-8390-0803ce31b8bf",
+		"_postman_id": "2e097861-32bb-4359-a84d-0b5409e81460",
 		"name": "Healthcare Job Platform",
 		"description": "API Endpoints for Health Professional Application",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21051828"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -521,6 +520,99 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Job Posts",
+					"item": [
+						{
+							"name": "List all jobs",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/my-jobs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"my-jobs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List all jobs By Category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/my-jobs?category=Nursing",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"my-jobs"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "Nursing"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get a single job post by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/my-jobs/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"my-jobs",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -960,10 +1052,10 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						},
 						{
 							"name": "Professional Login Copy",
@@ -989,10 +1081,10 @@
 									]
 								}
 							},
-							"_postman_previewlanguage": null,
-							"header": null,
+							"_postman_previewlanguage": "Text",
+							"header": [],
 							"cookie": [],
-							"body": null
+							"body": ""
 						}
 					]
 				},

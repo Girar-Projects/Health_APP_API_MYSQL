@@ -529,10 +529,14 @@ router.get("/my-jobs", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     let query = "SELECT * FROM JobPosts";
-    let values = [id];
-    if (category) { // if category parameter is passed, add WHERE clause
+    let values = [category];
+    if (category) {
+      // if category parameter is passed, add WHERE clause
       query += " WHERE Category = ?";
       values.push(category);
+      console.log("afdsf", query);
+
+      console.log("afdsf", category);
     }
     connection.query(query, values, (err, results) => {
       if (err) return queryError(res, err, "Failed to fetch job postings");
@@ -542,8 +546,6 @@ router.get("/my-jobs", authenticate, (req, res) => {
     });
   }
 });
-
-
 
 // Get a single Job Post By ID
 router.get("/my-jobs/:id", authenticate, (req, res) => {
