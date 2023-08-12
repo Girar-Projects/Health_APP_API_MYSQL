@@ -163,7 +163,7 @@ app.post("/register", (req, res) => {
             expiresIn: "1h",
           });
 
-          return res.status(201).json({
+          return res.status(200).json({
             code: 200,
             status: "success",
             message: "User registered successfully",
