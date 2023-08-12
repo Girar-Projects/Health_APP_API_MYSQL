@@ -147,3 +147,6 @@ CREATE TABLE EduWorkExperience (
   PRIMARY KEY (id),
   FOREIGN KEY (ProfessionalID) REFERENCES HealthProfessional (id)
 );
+
+
+ALTER TABLE JobPosts ADD FULLTEXT(JobPosition, ExperienceLevel, Category);

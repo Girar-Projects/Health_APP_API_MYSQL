@@ -4,6 +4,7 @@ const connection = mysql.createConnection({
   user: "health_testing",
   password: "0919483800",
   database: "health_app_test",
+  multipleStatements: true,
 
   // host: "localhost",
   // user: "root",

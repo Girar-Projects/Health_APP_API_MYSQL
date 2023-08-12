@@ -747,9 +747,10 @@ router.get("/filter-job/search", authenticate, (req, res) => {
   WHERE (JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?)
     AND Salary >= ? AND Salary <= ?
     AND WorkLocation LIKE ?;
-
+  
   SELECT *,
-    MATCH(JobPosition, ExperienceLevel, Category) AGAINST (? IN NATURAL LANGUAGE MODE) AS score
+    MATCH(JobPosition, ExperienceLevel, Category) AGAINST (? IN NATURAL LANGUAGE MODE) AS score,
+    MATCH(JobPosition, ExperienceLevel, Category) AGAINST (? IN NATURAL LANGUAGE MODE) AS matched_keywords
   FROM JobPosts
   WHERE (JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?)
     AND Salary >= ? AND Salary <= ?
@@ -757,28 +758,37 @@ router.get("/filter-job/search", authenticate, (req, res) => {
   ORDER BY score DESC`;
 
   const searchParams = [
-    q,
-    q,
-    q,
-    minSalary,
-    maxSalary,
-    "%" + location + "%",
-    q,
-    q,
-    q,
-    minSalary,
-    maxSalary,
-    "%" + location + "%",
-  ];
-
+    '%' + q + '%',
+    '%' + q + '%',
+    '%' + q + '%',
+    parseInt(minSalary, 10), 
+    parseInt(maxSalary, 10), 
+    '%' + location + '%',
+    '%' + q + '%',
+    '%' + q + '%',
+    '%' + q + '%',
+    parseInt(minSalary, 10), 
+    parseInt(maxSalary, 10), 
+    '%' + location + '%',, 
+      '%' + location + '%',
+];
   connection.query(searchQuery, searchParams, (err, results) => {
-    if (err) return queryError(res, err, "Failed to search for jobs");
+    if (err) {
+      console.error("Failed to search for jobs", err);
+      res
+        .status(500)
+        .json({ status: 500, message: "Failed to search for jobs" });
+      return;
+    }
 
     const totalCount = results[0][0].totalCount;
 
     results[1].forEach((result) => {
-      result.relevanceScore = Math.round((result.score / q.length) * 100);
+      result.relevanceScore = Math.round(
+        (result.score / result.matched_keywords) * 100
+      );
       delete result.score;
+      delete result.matched_keywords;
     });
 
     res.status(200).json({
