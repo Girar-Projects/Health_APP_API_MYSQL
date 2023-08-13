@@ -566,7 +566,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/my-jobs?category=Nursing",
+									"raw": "{{baseUrl}}/professional/my-jobs?category=Medical",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -577,7 +577,7 @@
 									"query": [
 										{
 											"key": "category",
-											"value": "Nursing"
+											"value": "Medical"
 										}
 									]
 								}
@@ -607,6 +607,91 @@
 										"professional",
 										"my-jobs",
 										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Search Job Post (Simple)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/job-post/simpleSearch?q=Nurse",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"job-post",
+										"simpleSearch"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "Nurse"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[WIP ]Advanced Filter JOBS",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/professional/filter-job/search?q=Software%20Engineer&minSalary=20000&maxSalary=300000&location=Adama",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"professional",
+										"filter-job",
+										"search"
+									],
+									"query": [
+										{
+											"key": "q",
+											"value": "Software%20Engineer"
+										},
+										{
+											"key": "minSalary",
+											"value": "20000"
+										},
+										{
+											"key": "maxSalary",
+											"value": "300000"
+										},
+										{
+											"key": "location",
+											"value": "Adama"
+										}
 									]
 								}
 							},
@@ -997,6 +1082,44 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Search",
+					"item": [
+						{
+							"name": "Search Professional",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/organization/searchByName?name=test",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"organization",
+										"searchByName"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "test"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -1100,7 +1223,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"uuid\": \"myuuid\",\n    \"email\": \"mynewemail@example.com\",\n    \"password\": \"mynewpassword\",\n    \"user_type\": \"organization\",\n    \"paymentStatus\": \"paid\",\n    \"profileCreationStatus\": \"completed\",\n    \"longitude\": 24.93545,\n    \"latitude\": 60.16952\n}"
+							"raw": "{\n    \"uuid\": \"myuuid\",\n    \"email\": \"mynewemails@example.com\",\n    \"password\": \"mynewpassword\",\n    \"user_type\": \"organization\",\n    \"phoneNumber\": \"+251712134838\",\n    \"paymentStatus\": \"paid\",\n    \"profileCreationStatus\": \"completed\",\n    \"longitude\": 24.93545,\n    \"latitude\": 60.16952\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/register",
@@ -1109,6 +1232,39 @@
 							],
 							"path": [
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-profile-status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"profileCreationStatus\": \"completed\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update-profile-status/:user_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update-profile-status",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -1167,7 +1323,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://health-app-mysql-api.onrender.com"
+			"value": "https://dr-health-app-mysql-api.onrender.com"
 		},
 		{
 			"key": "token",

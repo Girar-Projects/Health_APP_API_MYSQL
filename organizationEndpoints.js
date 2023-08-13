@@ -73,7 +73,15 @@ router.get("/organization-info/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
+  }
+
+  // else if (req.user.paymentStatus !== "paid") {
+  //   res.status(403).json({
+  //     message: "Please Complete payment to access this endpoint ! ",
+  //     statusCode: 403,
+  //   });
+  // }
+  else {
     connection.query(
       "SELECT * FROM HealthOrganization WHERE OrganizationID=?",
       [id],
@@ -103,6 +111,11 @@ router.put("/organization-info/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     // Check if required fields are missing
     if (
@@ -169,6 +182,11 @@ router.post("/documents/:uid", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     // Check if required fields are missing
     if (!data.documentName || !data.documentPath) {
@@ -196,6 +214,11 @@ router.get("/documents/:uid", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM LegalDocs WHERE OrganizationID=?",
@@ -215,6 +238,11 @@ router.get("/documents/:uid", authenticate, (req, res) => {
 router.get("/professionals", authenticate, (req, res) => {
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query("SELECT * FROM HealthProfessional", (err, results) => {
       if (err)
@@ -231,6 +259,11 @@ router.get("/professional/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM HealthProfessional WHERE  id=?",
@@ -253,6 +286,11 @@ router.get("/my-jobs/all/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM JobPosts WHERE organizationId=?",
@@ -307,8 +345,12 @@ router.post("/my-jobs", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     return res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    return res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   }
-
   connection.query(
     "INSERT INTO JobPosts (organizationId, jobPosition, salary, deadline, jobType, experienceLevel, workLocation, category, numberOfEmployees, prerequisites, descriptions, rolesAndResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
@@ -346,6 +388,11 @@ router.get("/my-jobs/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM JobPosts WHERE JobID=?",
@@ -374,6 +421,11 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     // Validate input
     if (
@@ -439,6 +491,11 @@ router.get("/applied/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.JobID WHERE JobPosts.organizationId=?",
@@ -453,7 +510,6 @@ router.get("/applied/:id", authenticate, (req, res) => {
   }
 });
 
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Searching ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Search Professionals by name
 router.get("/searchByName", authenticate, (req, res) => {
@@ -461,6 +517,11 @@ router.get("/searchByName", authenticate, (req, res) => {
 
   if (req.user.type !== "organization") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM HealthProfessional WHERE CONCAT(firstName, ' ', lastName) LIKE ?",

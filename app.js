@@ -46,7 +46,11 @@ app.post("/login", (req, res) => {
       } else {
         const user = results[0];
         const token = jwt.sign(
-          { id: user.user_id, type: user.user_type },
+          {
+            id: user.user_id,
+            type: user.user_type,
+            paymentStatus: user.paymentStatus,
+          },
           secretKey
         );
         res.json({
@@ -266,6 +270,41 @@ app.put("/update-profile-status/:user_id", (req, res) => {
 
 app.get("/", (req, res) => {
   res.send("Health App server is running.");
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Update Payment Status ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// Update Payment Status
+app.put("/update-payment-status/:user_id", (req, res) => {
+  const userId = req.params.user_id;
+  const newStatus = req.body.paymentStatus;
+
+  connection.query(
+    "UPDATE users SET paymentStatus=? WHERE user_id=?",
+    [newStatus, userId],
+    (err, result) => {
+      if (err) {
+        console.error("Error updating payment status: " + err.stack);
+        res.status(500).json({
+          code: 500,
+          status: "error",
+          message: "Could not update payment status",
+        });
+      } else if (result.affectedRows === 0) {
+        res.status(404).json({
+          code: 404,
+          status: "error",
+          message: "User not found",
+        });
+      } else {
+        res.status(200).json({
+          code: 200,
+          status: "success",
+          message: "Payment status updated successfully",
+        });
+      }
+    }
+  );
 });
 
 module.exports = app;

@@ -11,7 +11,15 @@ router.post("/personal-info", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
+  }
+
+  // else if (req.user.paymentStatus !== "paid") {
+  //   res.status(403).json({
+  //     message: "Please Complete payment to access this endpoint ! ",
+  //     statusCode: 403,
+  //   });
+  // }
+  else {
     // Check if user_id field is present and has a valid value
     if (!data.user_id || isNaN(data.user_id)) {
       return res
@@ -107,7 +115,15 @@ router.get("/personal-info/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
+  }
+
+  // else if (req.user.paymentStatus !== "paid") {
+  //   res.status(403).json({
+  //     message: "Please Complete payment to access this endpoint ! ",
+  //     statusCode: 403,
+  //   });
+  // }
+  else {
     connection.query(
       "SELECT * FROM HealthProfessional WHERE id=?",
       [id],
@@ -129,7 +145,15 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
-  } else {
+  }
+
+  // else if (req.user.paymentStatus !== "paid") {
+  //   res.status(403).json({
+  //     message: "Please Complete payment to access this endpoint ! ",
+  //     statusCode: 403,
+  //   });
+  // }
+  else {
     // Validate input
     if (!id) {
       return res
@@ -193,6 +217,11 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
 router.get("/all", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query("SELECT * FROM HealthProfessional", (err, results) => {
       if (err)
@@ -213,6 +242,11 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "INSERT INTO EduWorkExperience (ProfessionalID, EducationLevel, WorkExperienceYear, employerName, positionHeld, startingDate, endingDate, mainResponsibilities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -275,6 +309,11 @@ router.put("/edu-work-experience/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "UPDATE EduWorkExperience SET EducationLevel=?, WorkExperienceYear=?, employerName=?, positionHeld=?, startingDate=?, endingDate=?, mainResponsibilities=? WHERE id=?",
@@ -314,6 +353,11 @@ router.post("/documents/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "INSERT INTO ProfessionalDocuments (documentTitle, documentPath, professionalId) VALUES (?, ?, ?)",
@@ -336,6 +380,11 @@ router.get("/documents/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM ProfessionalDocuments WHERE professionalId=?",
@@ -358,6 +407,11 @@ router.post("/apply", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     // Validate input
     if (!data.professionalId || !data.jobId) {
@@ -388,6 +442,11 @@ router.get("/my-applied", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Applications WHERE professionalId=?",
@@ -410,6 +469,11 @@ router.post("/bookmark", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?,?)",
@@ -430,6 +494,11 @@ router.post("/bookmark", authenticate, (req, res) => {
 router.get("/bookmarks", authenticate, (req, res) => {
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query("SELECT * FROM Bookmarks", (err, results) => {
       if (err)
@@ -447,6 +516,11 @@ router.get("/bookmark/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Bookmarks WHERE id=?",
@@ -467,6 +541,11 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Bookmarks WHERE professionalId=?",
@@ -493,6 +572,11 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     // Validate input
     if (!id) {
@@ -531,6 +615,11 @@ router.get("/job-posts", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     let query = "SELECT * FROM JobPosts";
     let values = [category];
@@ -557,6 +646,11 @@ router.get("/job-posts/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM JobPosts WHERE JobID=?",
@@ -586,6 +680,11 @@ router.get("/bookmarks/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Bookmarks JOIN JobPosts ON Bookmarks.jobId = JobPosts.id WHERE Bookmarks.professionalId=?",
@@ -609,6 +708,11 @@ router.post("/bookmarks", authenticate, (req, res) => {
     req.user.id !== parseInt(data.professionalId)
   ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "INSERT INTO Bookmarks (professionalId, jobId) VALUES (?, ?)",
@@ -629,6 +733,11 @@ router.delete("/bookmarks/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "DELETE FROM Bookmarks WHERE id=? AND professionalId=?",
@@ -651,6 +760,11 @@ router.get("/applications/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "SELECT * FROM Applications JOIN JobPosts ON Applications.jobId = JobPosts.id WHERE Applications.professionalId=?",
@@ -674,6 +788,11 @@ router.post("/applications", authenticate, (req, res) => {
     req.user.id !== parseInt(data.professionalId)
   ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
@@ -695,6 +814,11 @@ router.delete("/applications/:id", authenticate, (req, res) => {
 
   if (req.user.type !== "professional") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
   } else {
     connection.query(
       "DELETE FROM Applications WHERE id=? AND professionalId=?",
@@ -721,16 +845,25 @@ router.get("/job-post/simpleSearch", authenticate, (req, res) => {
       .status(400)
       .json({ message: "Search query parameter is required", statusCode: 400 });
   } else {
-    connection.query(
-      "SELECT * FROM JobPosts WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?",
-      ["%" + q + "%", "%" + q + "%", "%" + q + "%"],
-      (err, results) => {
-        if (err) return queryError(res, err, "Failed to search for jobs");
-        res
-          .status(200)
-          .json({ data: results, status: 200, totalCount: results.length });
-      }
-    );
+    if (req.user.type !== "professional") {
+      res.status(403).json({ message: "Access denied", statusCode: 403 });
+    } else if (req.user.paymentStatus !== "paid") {
+      res.status(403).json({
+        message: "Please Complete payment to access this endpoint ! ",
+        statusCode: 403,
+      });
+    } else {
+      connection.query(
+        "SELECT * FROM JobPosts WHERE JobPosition LIKE ? OR ExperienceLevel LIKE ? OR Category LIKE ?",
+        ["%" + q + "%", "%" + q + "%", "%" + q + "%"],
+        (err, results) => {
+          if (err) return queryError(res, err, "Failed to search for jobs");
+          res
+            .status(200)
+            .json({ data: results, status: 200, totalCount: results.length });
+        }
+      );
+    }
   }
 });
 
@@ -741,6 +874,15 @@ router.get("/filter-job/search", authenticate, (req, res) => {
   const minSalary = parseInt(req.query.minSalary) || 0;
   const maxSalary = parseInt(req.query.maxSalary) || Infinity;
   const location = req.query.location || "";
+
+  if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
+
+    return;
+  }
 
   const searchQuery = `
   SELECT COUNT(*) AS totalCount FROM JobPosts
@@ -758,20 +900,21 @@ router.get("/filter-job/search", authenticate, (req, res) => {
   ORDER BY score DESC`;
 
   const searchParams = [
-    '%' + q + '%',
-    '%' + q + '%',
-    '%' + q + '%',
-    parseInt(minSalary, 10), 
-    parseInt(maxSalary, 10), 
-    '%' + location + '%',
-    '%' + q + '%',
-    '%' + q + '%',
-    '%' + q + '%',
-    parseInt(minSalary, 10), 
-    parseInt(maxSalary, 10), 
-    '%' + location + '%',, 
-      '%' + location + '%',
-];
+    "%" + q + "%",
+    "%" + q + "%",
+    "%" + q + "%",
+    parseInt(minSalary, 10),
+    parseInt(maxSalary, 10),
+    "%" + location + "%",
+    "%" + q + "%",
+    "%" + q + "%",
+    "%" + q + "%",
+    parseInt(minSalary, 10),
+    parseInt(maxSalary, 10),
+    "%" + location + "%",
+    ,
+    "%" + location + "%",
+  ];
   connection.query(searchQuery, searchParams, (err, results) => {
     if (err) {
       console.error("Failed to search for jobs", err);
