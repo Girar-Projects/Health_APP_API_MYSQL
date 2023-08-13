@@ -539,13 +539,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/my-jobs",
+									"raw": "{{baseUrl}}/professional/job-posts",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"professional",
-										"my-jobs"
+										"job-posts"
 									]
 								}
 							},
@@ -566,13 +566,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/my-jobs?category=Medical",
+									"raw": "{{baseUrl}}/professional/job-posts?category=Medical",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"professional",
-										"my-jobs"
+										"job-posts"
 									],
 									"query": [
 										{
@@ -599,13 +599,13 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/my-jobs/1",
+									"raw": "{{baseUrl}}/professional/job-posts/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"professional",
-										"my-jobs",
+										"job-posts",
 										"1"
 									]
 								}
@@ -666,7 +666,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/professional/filter-job/search?q=Software%20Engineer&minSalary=20000&maxSalary=300000&location=Adama",
+									"raw": "{{baseUrl}}/professional/filter-job/search?q=Medical&minSalary=20000&maxSalary=300000&location=Adama",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -678,7 +678,7 @@
 									"query": [
 										{
 											"key": "q",
-											"value": "Software%20Engineer"
+											"value": "Medical"
 										},
 										{
 											"key": "minSalary",
@@ -1138,7 +1138,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"pro@test.com\",\n    \"password\": \"Test\"\n}"
+							"raw": "{\n    \"email\": \"org@test.com\",\n    \"password\": \"test\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/login",
@@ -1292,6 +1292,39 @@
 							"path": [
 								"update-password",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Payment-status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paymentStatus\": \"paid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update-payment-status/:user_id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update-payment-status",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "1"
+								}
 							]
 						}
 					},
