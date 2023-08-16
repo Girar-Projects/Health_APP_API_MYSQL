@@ -20,7 +20,7 @@ app.post("/refresh-db-connection", (req, res) => {
   connection.destroy();
   connection.connect((err) => {
     if (err) {
-      console.error("Error connecting to database: " + err.stack);
+      console.error("Error connecting to database: " + err);
       res.status(500).send("Error connecting to database");
       return;
     }
@@ -39,7 +39,7 @@ app.post("/login", (req, res) => {
     [data.email, data.password],
     (err, results) => {
       if (err) {
-        console.error("Error executing query: " + err.stack);
+        console.error("Error executing query: " + err);
         res.sendStatus(500);
       } else if (results.length === 0) {
         res.status(401).json({ message: "Invalid email or password" });
@@ -122,7 +122,7 @@ app.post("/register", (req, res) => {
   const sql = "SELECT * FROM users WHERE email = ?";
   connection.query(sql, [email], (err, result) => {
     if (err) {
-      console.error("Error checking if email exists: " + err.stack);
+      console.error("Error checking if email exists: " + err);
       return res.status(500).json({
         code: 500,
         status: "error",
@@ -153,7 +153,7 @@ app.post("/register", (req, res) => {
 
       connection.query(sql, values, (err, result) => {
         if (err) {
-          console.error("Error registering new user: " + err.stack);
+          console.error("Error registering new user: " + err);
           return res.status(500).json({
             code: 500,
             status: "error",
@@ -206,7 +206,7 @@ app.put("/update-password/:user_id", (req, res) => {
   const checkUserSql = "SELECT * FROM users WHERE user_id=?";
   connection.query(checkUserSql, user_id, (err, results) => {
     if (err) {
-      console.error("Error executing query: " + err.stack);
+      console.error("Error executing query: " + err);
       res.sendStatus(500);
     } else if (results.length === 0) {
       res
@@ -219,7 +219,7 @@ app.put("/update-password/:user_id", (req, res) => {
         [newPassword, user_id],
         (err, result) => {
           if (err) {
-            console.error("Error updating user password: " + err.stack);
+            console.error("Error updating user password: " + err);
             res.sendStatus(500);
           } else {
             res.status(200).json({
@@ -245,7 +245,7 @@ app.put("/update-profile-status/:user_id", (req, res) => {
     [newStatus, userId],
     (err, result) => {
       if (err) {
-        console.error("Error updating profile status: " + err.stack);
+        console.error("Error updating profile status: " + err);
         res.status(500).json({
           code: 500,
           status: "error",
@@ -284,7 +284,7 @@ app.put("/update-payment-status/:user_id", (req, res) => {
     [newStatus, userId],
     (err, result) => {
       if (err) {
-        console.error("Error updating payment status: " + err.stack);
+        console.error("Error updating payment status: " + err);
         res.status(500).json({
           code: 500,
           status: "error",
@@ -303,6 +303,102 @@ app.put("/update-payment-status/:user_id", (req, res) => {
           message: "Payment status updated successfully",
         });
       }
+    }
+  );
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Add Transaction Id ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.post("/add-transaction-id/:user_id", (req, res) => {
+  const { user_id } = req.params;
+  const { transaction_id, currentPaymentStatus } = req.body;
+
+  if (!user_id || !transaction_id || !currentPaymentStatus) {
+    res.status(400).json({
+      code: 400,
+      status: "fail",
+      message: "user_id, transaction_id and currentPaymentStatus are required",
+    });
+    return;
+  }
+
+  const checkUserSql = "SELECT * FROM users WHERE user_id=?";
+  connection.query(checkUserSql, user_id, (err, results) => {
+    if (err) {
+      console.error("Error executing query: " + err);
+      res.sendStatus(500);
+    } else if (results.length === 0) {
+      res
+        .status(404)
+        .json({ code: 404, status: "fail", message: "User not found" });
+    } else {
+      const insertTransactionSql =
+        "INSERT INTO TransactionDetails (user_id, transaction_id, currentPaymentStatus) VALUES (?, ?, ?)";
+      const values = [user_id, transaction_id, currentPaymentStatus];
+
+      connection.query(insertTransactionSql, values, (err, result) => {
+        if (err) {
+          console.error("Error adding transaction id: " + err);
+          res.status(500).json({
+            code: 500,
+            status: "error",
+            message: "Could not add transaction id",
+          });
+        } else {
+          const getUpdatedTimeSql =
+            "SELECT last_updated FROM TransactionDetails WHERE id=?";
+          connection.query(
+            getUpdatedTimeSql,
+            result.insertId,
+            (err, result) => {
+              if (err) {
+                console.error("Error getting last updated time: " + err);
+                res.status(500).json({
+                  code: 500,
+                  status: "error",
+                  message: "Could not retrieve last updated time",
+                });
+              } else {
+                const lastUpdatedTime = result[0].last_updated;
+                res.status(200).json({
+                  code: 200,
+                  status: "success",
+                  message: "Transaction id added successfully",
+                  last_updated: lastUpdatedTime,
+                });
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+});
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  Check EMAIL IF registered ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.get("/check-email/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  connection.query(
+    "SELECT EXISTS(SELECT 1 FROM users WHERE user_id = ?) AS email_registered",
+    [user_id],
+    (err, results) => {
+      if (err) {
+        const message = "Failed to check if email is registered";
+        const code = 500;
+        res.status(code).json({ message, code, err });
+        return;
+      }
+      const email_registered = results[0].email_registered === 1;
+      const message = email_registered
+        ? "Email is registered"
+        : "Email is not registered";
+      res.status(200).json({
+        code: 200,
+        email_registered,
+        message,
+      });
     }
   );
 });

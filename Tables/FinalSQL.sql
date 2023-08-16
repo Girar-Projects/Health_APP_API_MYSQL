@@ -92,6 +92,8 @@ CREATE TABLE JobPosts (
   Prerequisites VARCHAR(1024) NOT NULL,
   Descriptions VARCHAR(1024),
   RolesAndResponsibilities VARCHAR(1024) NOT NULL,
+  Created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  Last_Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (JobID),
   FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
 );
@@ -146,6 +148,16 @@ CREATE TABLE EduWorkExperience (
   mainResponsibilities VARCHAR(255),
   PRIMARY KEY (id),
   FOREIGN KEY (ProfessionalID) REFERENCES HealthProfessional (id)
+);
+
+CREATE TABLE TransactionDetails (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  transaction_id VARCHAR(255) NOT NULL,
+  currentPaymentStatus VARCHAR(255) NOT NULL,
+  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
 
 

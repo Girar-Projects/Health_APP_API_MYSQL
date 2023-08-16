@@ -627,10 +627,8 @@ router.get("/job-posts", authenticate, (req, res) => {
       // if category parameter is passed, add WHERE clause
       query += " WHERE Category = ?";
       values.push(category);
-      console.log("afdsf", query);
-
-      console.log("afdsf", category);
     }
+    query += " ORDER BY Created_at DESC"; // add ORDER BY clause to order by Created_at DESC
     connection.query(query, values, (err, results) => {
       if (err) return queryError(res, err, "Failed to fetch job postings");
       res
