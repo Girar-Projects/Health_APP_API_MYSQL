@@ -80,6 +80,52 @@ app.post("/login", (req, res) => {
   );
 });
 
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Admin Login ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+app.post("/admin_login", (req, res) => {
+  const data = req.body;
+
+  connection.query(
+    "SELECT * FROM users WHERE email=? AND BINARY password=? AND user_type='admin'",
+    [data.email, data.password],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing query: " + err);
+        res.sendStatus(500);
+      } else if (results.length === 0) {
+        res.status(401).json({ message: "Invalid email or password" });
+      } else {
+        const user = results[0];
+        const token = jwt.sign(
+          {
+            id: user.user_id,
+            type: user.user_type,
+            paymentStatus: user.paymentStatus,
+          },
+          secretKey
+        );
+        res.json({
+          statusCode: "200",
+          message: "Admin Has Been Logged In Successfully!",
+          user_id: user.user_id,
+          email: user.email,
+          uuid: user.uuid,
+          userType: user.user_type,
+          PhoneNumber: user.phoneNumber,
+          token: token,
+          paymentStatus: user.paymentStatus,
+          profileCreationStatus: user.profileCreationStatus,
+          longitude: user.longitude,
+          latitude: user.latitude,
+        });
+      }
+    }
+  );
+});
+
+
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Register ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 
 app.post("/register", (req, res) => {
