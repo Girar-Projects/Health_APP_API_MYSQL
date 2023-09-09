@@ -4,16 +4,20 @@ const connection = require("./db");
 const jwt = require("jsonwebtoken");
 const secretKey = "mysecretkey";
 const app = express();
+const cors = require('cors');
 const professionalEndpoints = require("./professionalEndpoints");
 const OrganizationEndpoints = require("./organizationEndpoints");
 
 // Add middleware to set the CORS header
+
+
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -80,7 +84,6 @@ app.post("/login", (req, res) => {
   );
 });
 
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Admin Login ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 app.post("/admin_login", (req, res) => {
@@ -123,8 +126,6 @@ app.post("/admin_login", (req, res) => {
     }
   );
 });
-
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Register ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 
