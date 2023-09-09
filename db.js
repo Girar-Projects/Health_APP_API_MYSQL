@@ -27,7 +27,7 @@ connection.connect((err) => {
 
 module.exports = connection;
 
-//////////////// UPDATED DB Connection
+//////////////// UPDATED DB Connection ////////////////////
 
 // const mysql = require("mysql");
 // const retry = require("retry");

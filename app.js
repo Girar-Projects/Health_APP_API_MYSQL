@@ -7,6 +7,12 @@ const app = express();
 const professionalEndpoints = require("./professionalEndpoints");
 const OrganizationEndpoints = require("./organizationEndpoints");
 
+// Add middleware to set the CORS header
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
