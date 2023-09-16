@@ -3,7 +3,7 @@ const router = express.Router();
 const connection = require("./db");
 const { authenticate, queryError } = require("./middlewares");
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Organization Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Organization Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Add new organization info
 router.post("/organization-info", authenticate, (req, res) => {
   const data = req.body;
@@ -240,19 +240,31 @@ router.get("/professionals", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
-      message: "Please Complete payment to access this endpoint ! ",
+      message: "Please Complete payment to access this endpoint! ",
       statusCode: 403,
     });
   } else {
-    connection.query("SELECT * FROM HealthProfessional", (err, results) => {
-      if (err)
-        return queryError(res, err, "Failed to fetch professionals list");
-      res
-        .status(200)
-        .json({ data: results, totalCount: results.length, statusCode: 200 });
-    });
+    connection.query(
+      "SELECT *, (SELECT EducationLevel FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS EducationLevel, (SELECT WorkExperienceYear FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS WorkExperienceYear FROM HealthProfessional",
+      (err, results) => {
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to fetch professionals list"
+          );
+        res.status(200).json({
+          data: results,
+          totalCount: results.length,
+          statusCode: 200,
+        });
+      }
+    );
   }
 });
+
+
+
 
 router.get("/professional/:id", authenticate, (req, res) => {
   const id = req.params.id;
@@ -261,22 +273,30 @@ router.get("/professional/:id", authenticate, (req, res) => {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
-      message: "Please Complete payment to access this endpoint ! ",
+      message: "Please Complete payment to access this endpoint! ",
       statusCode: 403,
     });
   } else {
     connection.query(
-      "SELECT * FROM HealthProfessional WHERE  id=?",
+      "SELECT *, (SELECT EducationLevel FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS EducationLevel, (SELECT WorkExperienceYear FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS WorkExperienceYear FROM HealthProfessional WHERE id=?",
       [id],
       (err, results) => {
-        if (err) return queryError(res, err, "Failed to fetch professional");
-        res
-          .status(200)
-          .json({ data: results, totalCount: results.length, statusCode: 200 });
+        if (err)
+          return queryError(
+            res,
+            err,
+            "Failed to fetch professional"
+          );
+        res.status(200).json({
+          data: results,
+          totalCount: results.length,
+          statusCode: 200,
+        });
       }
     );
   }
 });
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
