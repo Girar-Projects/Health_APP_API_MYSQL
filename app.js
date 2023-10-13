@@ -4,12 +4,12 @@ const connection = require("./db");
 const jwt = require("jsonwebtoken");
 const secretKey = "mysecretkey";
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 const professionalEndpoints = require("./professionalEndpoints");
 const OrganizationEndpoints = require("./organizationEndpoints");
+const AdminEndpoints = require("./adminEndpoints");
 
 // Add middleware to set the CORS header
-
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/professional", professionalEndpoints);
 app.use("/organization", OrganizationEndpoints);
+app.use("/admin", AdminEndpoints);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Database Connectivity Refresh ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
 

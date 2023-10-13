@@ -17,7 +17,7 @@ CREATE TABLE users (
 
 
 CREATE TABLE HealthProfessional (
-  id INT NOT NULL,
+  id INT AUTO_INCREMENT NOT NULL,
   user_id INT NOT NULL,
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE HealthProfessional (
 );
 
 CREATE TABLE HealthOrganization (
-  OrganizationID INT NOT NULL,
+  OrganizationID INT AUTO_INCREMENT NOT NULL,
   user_id INT NOT NULL,
   OrganizationName VARCHAR(255) NOT NULL,
   OrganizationType VARCHAR(255) NOT NULL,
@@ -54,17 +54,24 @@ CREATE TABLE HealthOrganization (
 );
 
 CREATE TABLE ProfessionalRequest (
-  RequestID INT NOT NULL,
+  RequestID INT AUTO_INCREMENT NOT NULL,
   organizationID INT NOT NULL,
   ProffesionalType VARCHAR(255) NOT NULL,
+  Gender VARCHAR(10) NOT NULL,
+  WorkPlace VARCHAR(255) NOT NULL,
+  ExperienceLevel VARCHAR(50) NOT NULL,
+  PhoneNumber VARCHAR(20) NOT NULL,
+  RequesterFullName VARCHAR(255) NOT NULL,
   RequestDate DATE NOT NULL,
   numberofproffesioals INT NOT NULL,
+  status VARCHAR(255),
   PRIMARY KEY (RequestID),
   FOREIGN KEY (organizationID) REFERENCES HealthOrganization (OrganizationID)
 );
 
+
 CREATE TABLE JobOffers (
-  OfferID INT NOT NULL,
+  OfferID INT AUTO_INCREMENT NOT NULL,
   RequestID INT NOT NULL,
   ProffesionalID INT NOT NULL,
   OfferDate DATE NOT NULL,
@@ -79,7 +86,7 @@ CREATE TABLE JobOffers (
 
 
 CREATE TABLE JobPosts (
-  JobID INT NOT NULL,
+  JobID INT AUTO_INCREMENT NOT NULL,
   OrganizationID INT NOT NULL,
   JobPosition VARCHAR(255) NOT NULL,
   Salary INT NOT NULL,
@@ -123,7 +130,7 @@ CREATE TABLE ProfessionalDocuments (
   professionalId INT NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (professionalId) REFERENCES HealthProfessional (id)
-);
+-- );
 
 CREATE TABLE LegalDocs (
   id INT NOT NULL AUTO_INCREMENT,
@@ -137,7 +144,7 @@ CREATE TABLE LegalDocs (
 
 
 CREATE TABLE EduWorkExperience (
-  id INT NOT NULL,
+  id INT AUTO_INCREMENT NOT NULL,
   ProfessionalID INT NOT NULL,
   EducationLevel VARCHAR(255) NOT NULL,
   WorkExperienceYear VARCHAR(255) NOT NULL,
@@ -162,3 +169,5 @@ CREATE TABLE TransactionDetails (
 
 
 ALTER TABLE JobPosts ADD FULLTEXT(JobPosition, ExperienceLevel, Category);
+
+ALTER TABLE users ADD COLUMN `name` VARCHAR(255) NULL AFTER `latitude`;

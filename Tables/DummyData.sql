@@ -12,9 +12,9 @@ INSERT INTO HealthOrganization (OrganizationID, user_id, OrganizationName, Organ
 (1, 2, 'Amsterdam Medical Center', 'Hospital', 'info@amc.nl', '+31206487622', 'Amsterdam', 'Zuidoost', 'Venserpolder', '123', '987654321', 'John Doe', 'Director', '+31698765432'),
 (2, 2, 'Amsterdam Red Cross', 'NGO', 'info@redcross.nl', '+31203134567', 'Amsterdam', 'Centrum', 'Nieuwmarkt', '456', '123456789', 'Jane Doe', 'Manager', '+31612345678');
 
-INSERT INTO ProfessionalRequest (RequestID, organizationID, ProffesionalType, RequestDate, numberofproffesioals) VALUES 
-(1, 1, 'Nurse', '2021-08-01', 5),
-(2, 2, 'Medical Doctor', '2021-09-01', 3);
+INSERT INTO ProfessionalRequest (RequestID, organizationID, ProffesionalType, Gender, WorkPlace, ExperienceLevel, PhoneNumber, RequesterFullName, RequestDate, numberofproffesioals) VALUES 
+(1, 1, 'Nurse', 'Female', 'Emergency Room', 'Intermediate', '+31612345678', 'John Doe', '2021-08-01', 5),
+(2, 2, 'Medical Doctor', 'Male', 'ICU', 'Expert', '+31206487622', 'Jane Doe', '2021-09-01', 3);
 
 INSERT INTO JobOffers (OfferID, RequestID, ProffesionalID, OfferDate, OfferStatus, OrganizationID) VALUES 
 (1, 1, 2, '2021-08-15', 'accepted', 1),

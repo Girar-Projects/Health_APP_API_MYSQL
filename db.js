@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const dbAddresses = ["mysql", "db4free.net", "localhost"];
 
 const connection = mysql.createConnection({
-  host: "db4free.net",
+  host: "localhost",
   user: "health_testing",
   password: "0919483800",
   database: "health_app_test",
