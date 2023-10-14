@@ -8,7 +8,7 @@ ENV MYSQL_PASSWORD=0919483800
 ENV MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password
 
 # Configure the MySQL server
-EXPOSE 3306
+EXPOSE 3307
 VOLUME /var/lib/mysql
 
 CMD ["mysqld"]
