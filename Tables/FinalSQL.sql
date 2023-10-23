@@ -19,6 +19,7 @@ CREATE TABLE users (
 CREATE TABLE HealthProfessional (
   id INT AUTO_INCREMENT NOT NULL,
   user_id INT NOT NULL,
+  phoneNumber VARCHAR(45),
   firstName VARCHAR(255) NOT NULL,
   lastName VARCHAR(255) NOT NULL,
   Age INT NOT NULL,
@@ -101,6 +102,7 @@ CREATE TABLE JobPosts (
   RolesAndResponsibilities VARCHAR(1024) NOT NULL,
   Created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   Last_Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status VARCHAR(45),
   PRIMARY KEY (JobID),
   FOREIGN KEY (OrganizationID) REFERENCES HealthOrganization (OrganizationID)
 );

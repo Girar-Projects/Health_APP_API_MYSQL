@@ -8,7 +8,7 @@ const { authenticate, queryError } = require("./middlewares");
 router.post("/organization-info", authenticate, (req, res) => {
   const data = req.body;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     // Check if required fields are missing
@@ -71,7 +71,7 @@ router.post("/organization-info", authenticate, (req, res) => {
 router.get("/organization-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   }
 
@@ -109,7 +109,7 @@ router.put("/organization-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -180,7 +180,7 @@ router.post("/documents/:uid", authenticate, (req, res) => {
   const uid = req.params.uid;
   const data = req.body;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -212,7 +212,7 @@ router.post("/documents/:uid", authenticate, (req, res) => {
 router.get("/documents/:uid", authenticate, (req, res) => {
   const uid = req.params.uid;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -236,7 +236,7 @@ router.get("/documents/:uid", authenticate, (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ List of Professionals  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 router.get("/professionals", authenticate, (req, res) => {
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -269,7 +269,7 @@ router.get("/professionals", authenticate, (req, res) => {
 router.get("/professional/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -304,7 +304,7 @@ router.get("/professional/:id", authenticate, (req, res) => {
 router.get("/my-jobs/all/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -313,7 +313,7 @@ router.get("/my-jobs/all/:id", authenticate, (req, res) => {
     });
   } else {
     connection.query(
-      "SELECT * FROM JobPosts WHERE organizationId=?",
+      "SELECT * FROM JobPosts WHERE organizationId=? AND status='active'",
       [id],
       (err, results) => {
         if (err) return queryError(res, err, "Failed to fetch job postings");
@@ -363,7 +363,7 @@ router.post("/my-jobs", authenticate, (req, res) => {
   //   });
   // }
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     return res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     return res.status(403).json({
@@ -406,7 +406,7 @@ router.post("/my-jobs", authenticate, (req, res) => {
 router.get("/my-jobs/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -439,7 +439,7 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -478,7 +478,7 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
     }
 
     connection.query(
-      "UPDATE JobPosts SET jobPosition=?, salary=?, deadline=?, jobType=?, numberOfEmployees=?, prerequisites=?, Descriptions=?, rolesAndResponsibilities=? WHERE id=? AND organizationId=?",
+      "UPDATE JobPosts SET jobPosition=?, salary=?, deadline=?, jobType=?, numberOfEmployees=?, prerequisites=?, Descriptions=?, rolesAndResponsibilities=? WHERE JobID=? AND organizationId=?",
       [
         data.jobPosition,
         data.salary,
@@ -502,6 +502,51 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
   }
 });
 
+
+// Delete a Job Post
+router.delete("/job-posts/:id", authenticate, (req, res) => {
+  const id = req.params.id;
+
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
+    res.status(403).json({ message: "Access denied", statusCode: 403 });
+    return;
+  } else if (req.user.paymentStatus !== "paid") {
+    res.status(403).json({
+      message: "Please Complete payment to access this endpoint ! ",
+      statusCode: 403,
+    });
+    return;
+  }
+
+  connection.query(
+    "UPDATE JobPosts SET status='deleted' WHERE JobID=? ",
+    [id],
+    (err, result) => {
+      
+      console.log("result.affected rows "+result.affectedRows)
+      if (err) {
+     
+        return queryError(res, err, "Failed to delete job post");
+      }
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({
+            message: "No matching record found for the given id",
+            statusCode: 404,
+          });
+      }
+
+      res.status(200).json({
+        message: "Job post deleted successfully",
+        status: 200,
+        totalCount: 1,
+      });
+    }
+  );
+});
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB Applications  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // Lists JOB applications for an organization
@@ -509,7 +554,7 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
 router.get("/applied/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -535,7 +580,7 @@ router.get("/applied/:id", authenticate, (req, res) => {
 router.get("/searchByName", authenticate, (req, res) => {
   const name = req.query.name;
 
-  if (req.user.type !== "organization") {
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({

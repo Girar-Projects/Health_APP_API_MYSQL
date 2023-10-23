@@ -9,7 +9,7 @@ const { authenticate, queryError } = require("./middlewares");
 router.post("/personal-info", authenticate, (req, res) => {
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   }
 
@@ -74,9 +74,10 @@ router.post("/personal-info", authenticate, (req, res) => {
           }
 
           connection.query(
-            "INSERT INTO HealthProfessional (user_id, firstName, lastName, Age, Gender, city, subCity, wereda, email, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO HealthProfessional (user_id, phoneNumber , firstName, lastName,  Age, Gender, city, subCity, wereda, email, profession, languages, Skills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
               data.user_id,
+              data.phoneNumber,
               data.firstName,
               data.lastName,
               data.Age,
@@ -113,7 +114,7 @@ router.post("/personal-info", authenticate, (req, res) => {
 router.get("/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   }
 
@@ -143,79 +144,89 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
+    return;
   }
 
-  // else if (req.user.paymentStatus !== "paid") {
-  //   res.status(403).json({
-  //     message: "Please Complete payment to access this endpoint ! ",
-  //     statusCode: 403,
-  //   });
+  // Validate input
+  if (!id) {
+    return res
+      .status(400)
+      .json({ message: "Missing id parameter", statusCode: 400 });
+  }
+
+  // Validate the Age field
+  if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid age format", statusCode: 400 });
+  }
+
+  // Validate the phoneNumber field
+  // if (data.phoneNumber && !/^\d{12}$/.test(data.phoneNumber)) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Invalid phone number format", statusCode: 400 });
   // }
-  else {
-    // Validate input
-    if (!id) {
-      return res
-        .status(400)
-        .json({ message: "Missing id parameter", statusCode: 400 });
-    }
 
-    // Validate the Age field
-    if (data.Age && (!Number.isInteger(data.Age) || data.Age < 0)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid age format", statusCode: 400 });
-    }
+  // Validate the email field
 
-    // Validate the phoneNumber field
-    // if (data.phoneNumber && !/^\d{12}$/.test(data.phoneNumber)) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Invalid phone number format", statusCode: 400 });
-    // }
+  // if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
+  //   return res
+  //     .status(400)
+  //     .json({ message: "Invalid email format", statusCode: 400 });
+  // }
 
-    // Validate the email field
-
-    // if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Invalid email format", statusCode: 400 });
-    // }
-
-    connection.query(
-      "UPDATE HealthProfessional SET firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, profession=?, languages=?, Skills=? WHERE id=? AND user_id=?",
-      [
-        data.firstName,
-        data.lastName,
-        data.Age,
-        data.Gender,
-        data.city,
-        data.subCity,
-        data.wereda,
-        data.email,
-        data.profession,
-        data.languages,
-        data.Skills,
-        id,
-        req.user.user_id,
-      ],
-      (err) => {
-        if (err)
-          return queryError(res, err, "Failed to update professional profile");
-        res.status(200).json({
-          message: "Personal info updated successfully",
-          status: 200,
-          totalCount: 1,
-        });
+  connection.query(
+    "UPDATE HealthProfessional SET phoneNumber=?, firstName=?, lastName=?, Age=?, Gender=?, city=?, subCity=?, wereda=?, email=?, profession=?, languages=?, Skills=? WHERE id=?",
+    [
+      data.phoneNumber,
+      data.firstName,
+      data.lastName,
+      data.Age,
+      data.Gender,
+      data.city,
+      data.subCity,
+      data.wereda,
+      data.email,
+      data.profession,
+      data.languages,
+      data.Skills,
+      id,
+      req.user.user_id,
+    ],
+    (err, result) => {
+      if (err) {
+        return queryError(
+          res,
+          err,
+          "Failed to update professional profile"
+        );
       }
-    );
-  }
+
+      if (result.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({
+            message: "No matching record found for the given id",
+            statusCode: 404,
+          });
+      }
+
+      res.status(200).json({
+        message: "Personal info updated successfully",
+        status: 200,
+        totalCount: 1,
+      });
+    }
+  );
 });
 
 // List all professionals
 router.get("/all", authenticate, (req, res) => {
-  if (req.user.type !== "professional") {
+  console.log(req.user.type);
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -240,7 +251,7 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -281,7 +292,7 @@ router.post("/edu-work-experience/:id", authenticate, (req, res) => {
 router.get("/edu-work-experience/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else {
     connection.query(
@@ -307,7 +318,7 @@ router.put("/edu-work-experience/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -351,7 +362,7 @@ router.post("/documents/:id", authenticate, (req, res) => {
   const id = req.params.id;
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -378,7 +389,7 @@ router.post("/documents/:id", authenticate, (req, res) => {
 router.get("/documents/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -405,7 +416,7 @@ router.get("/documents/:id", authenticate, (req, res) => {
 router.post("/apply", authenticate, (req, res) => {
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -440,7 +451,7 @@ router.post("/apply", authenticate, (req, res) => {
 router.get("/my-applied", authenticate, (req, res) => {
   const id = req.user.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -467,7 +478,7 @@ router.get("/my-applied", authenticate, (req, res) => {
 router.post("/bookmark", authenticate, (req, res) => {
   const data = req.body;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -492,7 +503,7 @@ router.post("/bookmark", authenticate, (req, res) => {
 
 //Get All bookmarked Jobs
 router.get("/bookmarks", authenticate, (req, res) => {
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -514,7 +525,7 @@ router.get("/bookmarks", authenticate, (req, res) => {
 router.get("/bookmark/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -539,7 +550,7 @@ router.get("/bookmark/:id", authenticate, (req, res) => {
 router.get("/bookmark/:professionalId", authenticate, (req, res) => {
   const id = req.params.professionalId;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -570,7 +581,7 @@ router.get("/bookmark/:professionalId", authenticate, (req, res) => {
 router.delete("/bookmark/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -613,7 +624,7 @@ router.get("/job-posts", authenticate, (req, res) => {
   const id = req.params.id;
   const category = req.query.category; // retrieve category parameter from request
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -621,7 +632,7 @@ router.get("/job-posts", authenticate, (req, res) => {
       statusCode: 403,
     });
   } else {
-    let query = "SELECT * FROM JobPosts";
+    let query = "SELECT * FROM JobPosts where status='active'";
     let values = [category];
     if (category) {
       // if category parameter is passed, add WHERE clause
@@ -642,7 +653,7 @@ router.get("/job-posts", authenticate, (req, res) => {
 router.get("/job-posts/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -676,7 +687,11 @@ router.get("/job-posts/:id", authenticate, (req, res) => {
 router.get("/bookmarks/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+  if (
+    req.user.type !== "professional" ||
+    req.user.type !== "admin" ||
+    req.user.id !== parseInt(id)
+  ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -703,6 +718,7 @@ router.post("/bookmarks", authenticate, (req, res) => {
 
   if (
     req.user.type !== "professional" ||
+    req.user.type !== "admin" ||
     req.user.id !== parseInt(data.professionalId)
   ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
@@ -729,7 +745,7 @@ router.post("/bookmarks", authenticate, (req, res) => {
 router.delete("/bookmarks/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -756,7 +772,11 @@ router.delete("/bookmarks/:id", authenticate, (req, res) => {
 router.get("/applications/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional" || req.user.id !== parseInt(id)) {
+  if (
+    req.user.type !== "professional" ||
+    req.user.type !== "admin" ||
+    req.user.id !== parseInt(id)
+  ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -783,6 +803,7 @@ router.post("/applications", authenticate, (req, res) => {
 
   if (
     req.user.type !== "professional" ||
+    req.user.type !== "admin" ||
     req.user.id !== parseInt(data.professionalId)
   ) {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
@@ -810,7 +831,7 @@ router.post("/applications", authenticate, (req, res) => {
 router.delete("/applications/:id", authenticate, (req, res) => {
   const id = req.params.id;
 
-  if (req.user.type !== "professional") {
+  if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
   } else if (req.user.paymentStatus !== "paid") {
     res.status(403).json({
@@ -843,7 +864,7 @@ router.get("/job-post/simpleSearch", authenticate, (req, res) => {
       .status(400)
       .json({ message: "Search query parameter is required", statusCode: 400 });
   } else {
-    if (req.user.type !== "professional") {
+    if (req.user.type !== "professional" && req.user.type !== "admin") {
       res.status(403).json({ message: "Access denied", statusCode: 403 });
     } else if (req.user.paymentStatus !== "paid") {
       res.status(403).json({
