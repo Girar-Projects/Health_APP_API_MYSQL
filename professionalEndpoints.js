@@ -619,6 +619,7 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 // List All Jobs Posted By Org
 router.get("/job-posts", authenticate, (req, res) => {
   const id = req.params.id;
@@ -632,11 +633,11 @@ router.get("/job-posts", authenticate, (req, res) => {
       statusCode: 403,
     });
   } else {
-    let query = "SELECT * FROM JobPosts where status='active'";
-    let values = [category];
+    let query = "SELECT * FROM JobPosts WHERE status='active'";
+    let values = [];
     if (category) {
-      // if category parameter is passed, add WHERE clause
-      query += " WHERE Category = ?";
+      // if category parameter is passed, add WHERE clause with a placeholder
+      query += " AND Category = ?";
       values.push(category);
     }
     query += " ORDER BY Created_at DESC"; // add ORDER BY clause to order by Created_at DESC
@@ -648,6 +649,7 @@ router.get("/job-posts", authenticate, (req, res) => {
     });
   }
 });
+
 
 // Get a single Job Post By ID
 router.get("/job-posts/:id", authenticate, (req, res) => {
