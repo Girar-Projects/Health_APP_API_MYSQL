@@ -1,0 +1,263 @@
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+-- Host: 196.188.127.211    Database: health_app_test
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+-- Table structure for table `Applications`
+--
+
+DROP TABLE IF EXISTS `Applications`;
+CREATE TABLE `Applications` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `professionalId` int NOT NULL,
+  `jobId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `professionalId` (`professionalId`),
+  KEY `jobId` (`jobId`),
+  CONSTRAINT `Applications_ibfk_1` FOREIGN KEY (`professionalId`) REFERENCES `HealthProfessional` (`id`),
+  CONSTRAINT `Applications_ibfk_2` FOREIGN KEY (`jobId`) REFERENCES `JobPosts` (`JobID`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Table structure for table `Bookmarks`
+--
+
+DROP TABLE IF EXISTS `Bookmarks`;
+
+CREATE TABLE `Bookmarks` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `professionalId` int NOT NULL,
+  `jobId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `professionalId` (`professionalId`),
+  KEY `jobId` (`jobId`),
+  CONSTRAINT `Bookmarks_ibfk_1` FOREIGN KEY (`professionalId`) REFERENCES `HealthProfessional` (`id`),
+  CONSTRAINT `Bookmarks_ibfk_2` FOREIGN KEY (`jobId`) REFERENCES `JobPosts` (`JobID`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `EduWorkExperience`
+--
+
+DROP TABLE IF EXISTS `EduWorkExperience`;
+
+CREATE TABLE `EduWorkExperience` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ProfessionalID` int NOT NULL,
+  `EducationLevel` varchar(255) NOT NULL,
+  `WorkExperienceYear` varchar(255) NOT NULL,
+  `employerName` varchar(255) DEFAULT NULL,
+  `positionHeld` varchar(255) DEFAULT NULL,
+  `startingDate` date DEFAULT NULL,
+  `endingDate` date DEFAULT NULL,
+  `mainResponsibilities` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `ProfessionalID` (`ProfessionalID`),
+  CONSTRAINT `EduWorkExperience_ibfk_1` FOREIGN KEY (`ProfessionalID`) REFERENCES `HealthProfessional` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `HealthOrganization`
+--
+
+DROP TABLE IF EXISTS `HealthOrganization`;
+
+CREATE TABLE `HealthOrganization` (
+  `OrganizationID` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `OrganizationName` varchar(255) NOT NULL,
+  `OrganizationType` varchar(255) NOT NULL,
+  `EmailAddress` varchar(255) NOT NULL,
+  `PhoneNumber` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `subCity` varchar(255) NOT NULL,
+  `wereda` varchar(255) NOT NULL,
+  `houseNo` varchar(255) NOT NULL,
+  `tinNo` varchar(255) NOT NULL,
+  `ContactPerson_Name` varchar(255) NOT NULL,
+  `ContactPerson_Position` varchar(255) NOT NULL,
+  `ContactPerson_Number` varchar(255) NOT NULL,
+  PRIMARY KEY (`OrganizationID`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `HealthOrganization_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `HealthProfessional`
+--
+
+DROP TABLE IF EXISTS `HealthProfessional`;
+
+CREATE TABLE `HealthProfessional` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `firstName` varchar(255) NOT NULL,
+  `lastName` varchar(255) NOT NULL,
+  `Age` int NOT NULL,
+  `Gender` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `subCity` varchar(255) NOT NULL,
+  `wereda` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `profession` varchar(255) NOT NULL,
+  `languages` varchar(255) NOT NULL,
+  `Skills` varchar(255) NOT NULL,
+  `phoneNumber` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `HealthProfessional_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `JobOffers`
+--
+
+DROP TABLE IF EXISTS `JobOffers`;
+
+CREATE TABLE `JobOffers` (
+  `OfferID` int NOT NULL AUTO_INCREMENT,
+  `RequestID` int NOT NULL,
+  `ProffesionalID` int NOT NULL,
+  `OfferDate` date NOT NULL,
+  `OfferStatus` varchar(255) NOT NULL,
+  `OrganizationID` int NOT NULL,
+  PRIMARY KEY (`OfferID`),
+  KEY `RequestID` (`RequestID`),
+  KEY `ProffesionalID` (`ProffesionalID`),
+  KEY `OrganizationID` (`OrganizationID`),
+  CONSTRAINT `JobOffers_ibfk_1` FOREIGN KEY (`RequestID`) REFERENCES `ProfessionalRequest` (`RequestID`),
+  CONSTRAINT `JobOffers_ibfk_2` FOREIGN KEY (`ProffesionalID`) REFERENCES `HealthProfessional` (`id`),
+  CONSTRAINT `JobOffers_ibfk_3` FOREIGN KEY (`OrganizationID`) REFERENCES `HealthOrganization` (`OrganizationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `JobPosts`
+--
+
+DROP TABLE IF EXISTS `JobPosts`;
+
+CREATE TABLE `JobPosts` (
+  `JobID` int NOT NULL AUTO_INCREMENT,
+  `OrganizationID` int NOT NULL,
+  `JobPosition` varchar(255) NOT NULL,
+  `Salary` int NOT NULL,
+  `Deadline` date NOT NULL,
+  `JobType` varchar(255) NOT NULL,
+  `ExperienceLevel` varchar(255) NOT NULL,
+  `WorkLocation` varchar(255) NOT NULL,
+  `Category` varchar(255) NOT NULL,
+  `NumberOfEmployees` int NOT NULL,
+  `Prerequisites` varchar(1024) NOT NULL,
+  `Descriptions` varchar(1024) DEFAULT NULL,
+  `RolesAndResponsibilities` varchar(1024) NOT NULL,
+  `Created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Last_Updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` varchar(45) DEFAULT 'active',
+  PRIMARY KEY (`JobID`),
+  KEY `OrganizationID` (`OrganizationID`),
+  FULLTEXT KEY `JobPosition` (`JobPosition`,`ExperienceLevel`,`Category`),
+  CONSTRAINT `JobPosts_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `HealthOrganization` (`OrganizationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Table structure for table `LegalDocs`
+--
+
+DROP TABLE IF EXISTS `LegalDocs`;
+
+CREATE TABLE `LegalDocs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `OrganizationID` int NOT NULL,
+  `documentName` varchar(255) NOT NULL,
+  `documentPath` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `OrganizationID` (`OrganizationID`),
+  CONSTRAINT `LegalDocs_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `HealthOrganization` (`OrganizationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Table structure for table `ProfessionalDocuments`
+--
+
+DROP TABLE IF EXISTS `ProfessionalDocuments`;
+
+CREATE TABLE `ProfessionalDocuments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `documentTitle` varchar(255) NOT NULL,
+  `documentPath` varchar(255) NOT NULL,
+  `professionalId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `professionalId` (`professionalId`),
+  CONSTRAINT `ProfessionalDocuments_ibfk_1` FOREIGN KEY (`professionalId`) REFERENCES `HealthProfessional` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `ProfessionalRequest`
+--
+
+DROP TABLE IF EXISTS `ProfessionalRequest`;
+
+CREATE TABLE `ProfessionalRequest` (
+  `RequestID` int NOT NULL AUTO_INCREMENT,
+  `organizationID` int NOT NULL,
+  `ProffesionalType` varchar(255) NOT NULL,
+  `Gender` varchar(10) NOT NULL,
+  `WorkPlace` varchar(255) NOT NULL,
+  `ExperienceLevel` varchar(50) NOT NULL,
+  `PhoneNumber` varchar(20) NOT NULL,
+  `RequesterFullName` varchar(255) NOT NULL,
+  `RequestDate` date NOT NULL,
+  `numberofproffesioals` int NOT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`RequestID`),
+  KEY `organizationID` (`organizationID`),
+  CONSTRAINT `ProfessionalRequest_ibfk_1` FOREIGN KEY (`organizationID`) REFERENCES `HealthOrganization` (`OrganizationID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `TransactionDetails`
+--
+
+DROP TABLE IF EXISTS `TransactionDetails`;
+
+CREATE TABLE `TransactionDetails` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `transaction_id` varchar(255) NOT NULL,
+  `currentPaymentStatus` varchar(255) NOT NULL,
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `TransactionDetails_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `user_type` varchar(250) NOT NULL,
+  `phoneNumber` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_login` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `paymentStatus` varchar(225) NOT NULL,
+  `profileCreationStatus` varchar(225) NOT NULL,
+  `longitude` decimal(10,6) DEFAULT NULL,
+  `latitude` decimal(10,6) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Dump completed on 2023-10-23 17:01:12

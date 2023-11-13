@@ -32,7 +32,6 @@ router.get("/organizations-List", authenticate, (req, res) => {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Professional Info ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // Get organization info
-// Updated endpoint to include user status
 
 router.get("/Professionals-List", authenticate, (req, res) => {
   if (req.user.type !== "admin") {
@@ -94,6 +93,8 @@ router.get("/Professionals-List", authenticate, (req, res) => {
   }
 });
 
+
+
 // Add new request from organization
 router.post("/professional-request", authenticate, (req, res) => {
   if (req.user.type !== "admin") {
@@ -154,6 +155,9 @@ router.post("/professional-request", authenticate, (req, res) => {
   );
 });
 
+
+
+
 // Add user to JobOffers table
 router.post("/job-offer", authenticate, (req, res) => {
   if (req.user.type !== "admin") {
@@ -184,6 +188,8 @@ router.post("/job-offer", authenticate, (req, res) => {
     }
   );
 });
+
+
 
 // Get JobOffers assigned to the user
 router.get("/job-offers/:id", authenticate, (req, res) => {
