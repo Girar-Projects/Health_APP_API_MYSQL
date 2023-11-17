@@ -463,7 +463,7 @@ router.post("/apply", authenticate, (req, res) => {
 
 // Check if professional applied to specific job
 router.get("/check-application", authenticate, (req, res) => {
-  const professionalId = req.user.id;
+  const professionalId = req.user.roleID;
   const jobId = req.query.jobId;
 
   if (!jobId) {
@@ -487,7 +487,7 @@ router.get("/check-application", authenticate, (req, res) => {
           message:
             "The professional has already applied to this job application",
 
-          data: results[0],
+          data: results,
           totalCount: results.length,
         });
       } else {
@@ -503,7 +503,7 @@ router.get("/check-application", authenticate, (req, res) => {
 
 //List all Applied Jobs for a single Professional
 router.get("/my-applied", authenticate, (req, res) => {
-  const id = req.user.id;
+  const id = req.user.roleID;
 
   console.log("USER ID : ", req.user);
 

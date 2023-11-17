@@ -30,6 +30,11 @@ CREATE TABLE `Applications` (
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+
+ALTER TABLE Applications
+ADD created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;	
+
+
 -- Table structure for table `Bookmarks`
 --
 
