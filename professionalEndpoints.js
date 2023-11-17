@@ -198,20 +198,14 @@ router.put("/personal-info/:id", authenticate, (req, res) => {
     ],
     (err, result) => {
       if (err) {
-        return queryError(
-          res,
-          err,
-          "Failed to update professional profile"
-        );
+        return queryError(res, err, "Failed to update professional profile");
       }
 
       if (result.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({
-            message: "No matching record found for the given id",
-            statusCode: 404,
-          });
+        return res.status(404).json({
+          message: "No matching record found for the given id",
+          statusCode: 404,
+        });
       }
 
       res.status(200).json({
@@ -432,24 +426,86 @@ router.post("/apply", authenticate, (req, res) => {
     }
 
     connection.query(
-      "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
+      "SELECT COUNT(*) AS count FROM Applications WHERE professionalId = ? AND jobId = ?",
       [data.professionalId, data.jobId],
-      (err) => {
-        if (err)
-          return queryError(res, err, "Failed to submit job application");
-        res.status(200).json({
-          message: "Job application submitted successfully",
-          status: 200,
-          totalCount: 1,
-        });
+      (err, results) => {
+        if (err) {
+          return queryError(res, err, "Failed to check job application");
+        }
+
+        if (results[0].count > 0) {
+          res.status(400).json({
+            message:
+              "The professional has already applied to this job application",
+            statusCode: 400,
+            totalCount: 0,
+          });
+        } else {
+          connection.query(
+            "INSERT INTO Applications (professionalId, jobId) VALUES (?, ?)",
+            [data.professionalId, data.jobId],
+            (err) => {
+              if (err) {
+                return queryError(res, err, "Failed to submit job application");
+              }
+              res.status(200).json({
+                message: "Job application submitted successfully",
+                statusCode: 200,
+                totalCount: 1,
+              });
+            }
+          );
+        }
       }
     );
   }
 });
 
+// Check if professional applied to specific job
+router.get("/check-application", authenticate, (req, res) => {
+  const professionalId = req.user.id;
+  const jobId = req.query.jobId;
+
+  if (!jobId) {
+    return res.status(400).json({
+      message: "Missing required query parameter: jobId",
+      statusCode: 400,
+    });
+  }
+
+  connection.query(
+    "SELECT * FROM Applications WHERE professionalId = ? AND jobId = ?",
+    [professionalId, jobId],
+    (err, results) => {
+      if (err) {
+        return queryError(res, err, "Failed to check job application");
+      }
+
+      if (results.length > 0) {
+        res.status(200).json({
+          statusCode: 400,
+          message:
+            "The professional has already applied to this job application",
+
+          data: results[0],
+          totalCount: results.length,
+        });
+      } else {
+        res.status(200).json({
+          message: "The professional has not applied to this job application",
+          statusCode: 200,
+          totalCount: results.length,
+        });
+      }
+    }
+  );
+});
+
 //List all Applied Jobs for a single Professional
 router.get("/my-applied", authenticate, (req, res) => {
   const id = req.user.id;
+
+  console.log("USER ID : ", req.user);
 
   if (req.user.type !== "professional" && req.user.type !== "admin") {
     res.status(403).json({ message: "Access denied", statusCode: 403 });
@@ -619,7 +675,6 @@ router.delete("/bookmark/:id", authenticate, (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 // List All Jobs Posted By Org
 router.get("/job-posts", authenticate, (req, res) => {
   const id = req.params.id;
@@ -649,7 +704,6 @@ router.get("/job-posts", authenticate, (req, res) => {
     });
   }
 });
-
 
 // Get a single Job Post By ID
 router.get("/job-posts/:id", authenticate, (req, res) => {

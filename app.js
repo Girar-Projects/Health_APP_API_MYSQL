@@ -98,16 +98,9 @@ app.post("/login", (req, res) => {
       } else if (results.length === 0) {
         res.status(401).json({ message: "Invalid email or password" });
       } else {
-        const user = results[0];
-        const token = jwt.sign(
-          {
-            id: user.user_id,
-            type: user.user_type,
-            paymentStatus: user.paymentStatus,
-          },
-          secretKey
-        );
         let query, idKey, table;
+
+        const user = results[0];
         if (user.user_type === "organization") {
           query = "SELECT * FROM HealthOrganization WHERE user_id=?";
           idKey = "OrganizationID";
@@ -123,6 +116,15 @@ app.post("/login", (req, res) => {
             res.sendStatus(500);
           } else {
             const userDetails = details[0];
+            const token = jwt.sign(
+              {
+                id: user.user_id,
+                type: user.user_type,
+                paymentStatus: user.paymentStatus,
+                [idKey]: userDetails[idKey],
+              },
+              secretKey
+            );
             res.json({
               statusCode: "200",
               message: "User Has Been Logged In Successfully!",
