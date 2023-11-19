@@ -114,6 +114,31 @@ app.post("/login", (req, res) => {
           if (err) {
             console.error("Error executing query: " + err);
             res.sendStatus(500);
+          } else if (details.length === 0) {
+            const token = jwt.sign(
+              {
+                id: user.user_id,
+                type: user.user_type,
+                paymentStatus: user.paymentStatus,
+                roleID: null,
+              },
+              secretKey
+            );
+            res.json({
+              statusCode: "200",
+              message: "User Has Been Logged In Successfully!",
+              uuid: user.uuid,
+              user_id: user.user_id,
+              roleID: null,
+              userType: user.user_type,
+              email: user.email,
+              PhoneNumber: user.phoneNumber,
+              token: token,
+              paymentStatus: user.paymentStatus,
+              profileCreationStatus: user.profileCreationStatus,
+              longitude: user.longitude,
+              latitude: user.latitude,
+            });
           } else {
             const userDetails = details[0];
             const token = jwt.sign(
