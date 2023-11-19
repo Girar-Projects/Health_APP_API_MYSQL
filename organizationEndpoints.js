@@ -248,11 +248,7 @@ router.get("/professionals", authenticate, (req, res) => {
       "SELECT *, (SELECT EducationLevel FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS EducationLevel, (SELECT WorkExperienceYear FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS WorkExperienceYear FROM HealthProfessional",
       (err, results) => {
         if (err)
-          return queryError(
-            res,
-            err,
-            "Failed to fetch professionals list"
-          );
+          return queryError(res, err, "Failed to fetch professionals list");
         res.status(200).json({
           data: results,
           totalCount: results.length,
@@ -262,9 +258,6 @@ router.get("/professionals", authenticate, (req, res) => {
     );
   }
 });
-
-
-
 
 router.get("/professional/:id", authenticate, (req, res) => {
   const id = req.params.id;
@@ -281,12 +274,7 @@ router.get("/professional/:id", authenticate, (req, res) => {
       "SELECT *, (SELECT EducationLevel FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS EducationLevel, (SELECT WorkExperienceYear FROM EduWorkExperience WHERE EduWorkExperience.ProfessionalID = HealthProfessional.id LIMIT 1) AS WorkExperienceYear FROM HealthProfessional WHERE id=?",
       [id],
       (err, results) => {
-        if (err)
-          return queryError(
-            res,
-            err,
-            "Failed to fetch professional"
-          );
+        if (err) return queryError(res, err, "Failed to fetch professional");
         res.status(200).json({
           data: results,
           totalCount: results.length,
@@ -296,7 +284,6 @@ router.get("/professional/:id", authenticate, (req, res) => {
     );
   }
 });
-
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB POSTS  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -502,7 +489,6 @@ router.put("/my-jobs/:id", authenticate, (req, res) => {
   }
 });
 
-
 // Delete a Job Post
 router.delete("/job-posts/:id", authenticate, (req, res) => {
   const id = req.params.id;
@@ -522,20 +508,16 @@ router.delete("/job-posts/:id", authenticate, (req, res) => {
     "UPDATE JobPosts SET status='deleted' WHERE JobID=? ",
     [id],
     (err, result) => {
-      
-      console.log("result.affected rows "+result.affectedRows)
+      console.log("result.affected rows " + result.affectedRows);
       if (err) {
-     
         return queryError(res, err, "Failed to delete job post");
       }
 
       if (result.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({
-            message: "No matching record found for the given id",
-            statusCode: 404,
-          });
+        return res.status(404).json({
+          message: "No matching record found for the given id",
+          statusCode: 404,
+        });
       }
 
       res.status(200).json({
@@ -575,6 +557,44 @@ router.get("/applied/:id", authenticate, (req, res) => {
   }
 });
 
+router.get("/myJobPost/:org_id/applicants", authenticate, (req, res) => {
+
+  const id = req.params.org_id;
+
+  if (req.user.type !== "organization" && req.user.type !== "admin") {
+    return res.status(403).json({ message: "Access denied", statusCode: 403 });
+  }
+
+  if (req.user.paymentStatus !== "paid") {
+    return res.status(403).json({
+      message: "Please complete payment to access this endpoint!",
+      statusCode: 403,
+    });
+  }
+
+  const query =
+    "SELECT JobPosts.*, IFNULL(COUNT(Applications.id), 0) AS ApplicantCount, IF(IFNULL(COUNT(Applications.id), 0) > 0, JSON_ARRAYAGG(JSON_OBJECT('id', HealthProfessional.id, 'firstName', HealthProfessional.firstName, 'lastName', HealthProfessional.lastName, 'email', HealthProfessional.email, 'Age', HealthProfessional.Age, 'Gender', HealthProfessional.Gender, 'city', HealthProfessional.city, 'subCity', HealthProfessional.subCity, 'wereda', HealthProfessional.wereda, 'profession', HealthProfessional.profession)), JSON_ARRAY()) AS Applicants " +
+    "FROM JobPosts " +
+    "LEFT JOIN Applications ON JobPosts.JobID = Applications.jobId " +
+    "LEFT JOIN HealthProfessional ON Applications.professionalId = HealthProfessional.id " +
+    "WHERE JobPosts.OrganizationID = ? " +
+    "GROUP BY JobPosts.JobID";
+
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Failed to list job posts", error: err });
+    }
+
+    res.status(200).json({
+      statusCode: 200,
+      total_Job_Posts: results.length,
+      
+      data: results,
+    });
+  });
+});
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Searching ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Search Professionals by name
 router.get("/searchByName", authenticate, (req, res) => {
