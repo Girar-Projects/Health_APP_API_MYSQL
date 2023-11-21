@@ -558,7 +558,6 @@ router.get("/applied/:id", authenticate, (req, res) => {
 });
 
 router.get("/myJobPost/:org_id/applicants", authenticate, (req, res) => {
-
   const id = req.params.org_id;
 
   if (req.user.type !== "organization" && req.user.type !== "admin") {
@@ -590,7 +589,7 @@ router.get("/myJobPost/:org_id/applicants", authenticate, (req, res) => {
     res.status(200).json({
       statusCode: 200,
       total_Job_Posts: results.length,
-      
+
       data: results,
     });
   });

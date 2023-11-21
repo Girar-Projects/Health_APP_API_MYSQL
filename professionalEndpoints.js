@@ -515,17 +515,44 @@ router.get("/my-applied", authenticate, (req, res) => {
       statusCode: 403,
     });
   } else {
-    connection.query(
-      "SELECT * FROM Applications WHERE professionalId=?",
-      [id],
-      (err, results) => {
-        if (err)
-          return queryError(res, err, "Failed to fetch list of applied jobs");
-        res
-          .status(200)
-          .json({ data: results, status: 200, totalCount: results.length });
-      }
-    );
+    const query = `SELECT Applications.id, Applications.professionalId, Applications.jobId, Applications.created_at, JobPosts.* 
+                   FROM Applications 
+                   INNER JOIN JobPosts ON Applications.jobId = JobPosts.JobID 
+                   WHERE Applications.professionalId = ?`;
+
+    connection.query(query, [id], (err, results) => {
+      if (err)
+        return queryError(res, err, "Failed to fetch list of applied jobs");
+
+      res.status(200).json({
+        data: results.map((result) => ({
+          id: result.id,
+          professionalId: result.professionalId,
+          jobId: result.jobId,
+          created_at: result.created_at,
+          JobInfo: {
+            JobID: result.JobID,
+            OrganizationID: result.OrganizationID,
+            JobPosition: result.JobPosition,
+            Salary: result.Salary,
+            Deadline: result.Deadline,
+            JobType: result.JobType,
+            ExperienceLevel: result.ExperienceLevel,
+            WorkLocation: result.WorkLocation,
+            Category: result.Category,
+            NumberOfEmployees: result.NumberOfEmployees,
+            Prerequisites: result.Prerequisites,
+            Descriptions: result.Descriptions,
+            RolesAndResponsibilities: result.RolesAndResponsibilities,
+            Created_at: result.Created_at,
+            Last_Updated: result.Last_Updated,
+            status: result.status,
+          },
+        })),
+        status: 200,
+        totalCount: results.length,
+      });
+    });
   }
 });
 
